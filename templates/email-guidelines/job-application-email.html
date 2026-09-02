@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلب انضمام لوظيفة Full-Stack Developer - مصطفى ياسر</title>
-    <!-- Google Fonts for Web Preview & Email Clients Fallback -->
+    <title>منصة قوالب البريد الإلكتروني | جذع - مصطفى ياسر</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="icon" href="/assets/logo.png" type="image/png">
 
     <style>
         /* Portfolio Brand Fonts */
         @font-face {
             font-family: 'thmanyah serif text';
-            src: url('otf/thmanyahseriftext-Regular.otf') format('opentype');
+            src: url('/otf/thmanyahseriftext-Regular.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -23,38 +23,15 @@
 
         @font-face {
             font-family: 'thmanyah serif text';
-            src: url('otf/thmanyahseriftext-Medium.otf') format('opentype');
-            font-weight: 500;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'thmanyah serif text';
-            src: url('otf/thmanyahseriftext-Bold.otf') format('opentype');
+            src: url('/otf/thmanyahseriftext-Bold.otf') format('opentype');
             font-weight: bold;
             font-style: normal;
             font-display: swap;
         }
 
         @font-face {
-            font-family: 'thmanyah serif text';
-            src: url('otf/thmanyahseriftext-Black.otf') format('opentype');
-            font-weight: 900;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
             font-family: 'Thmanyah';
-            src: url('otf/thmanyahseriftext-Regular.otf') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'Thmanyah';
-            src: url('otf/thmanyahseriftext-Bold.otf') format('opentype');
+            src: url('/otf/thmanyahseriftext-Bold.otf') format('opentype');
             font-weight: bold;
             font-style: normal;
         }
@@ -97,13 +74,12 @@
         /* Top App Bar */
         .app-header {
             max-width: 900px;
-            margin: 0 auto 22px;
+            margin: 0 auto 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(42, 31, 26, 0.85);
+            background: rgba(42, 31, 26, 0.9);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             padding: 14px 22px;
             border-radius: 14px;
             border: 1px solid rgba(212, 163, 115, 0.3);
@@ -139,10 +115,50 @@
             color: #A3B18A;
         }
 
-        /* Control Panel */
+        /* Template Switcher Tabs */
+        .tabs-nav {
+            max-width: 900px;
+            margin: 0 auto 18px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+        }
+
+        .tab-btn {
+            background: rgba(42, 31, 26, 0.7);
+            color: #FAEDCD;
+            border: 1px solid rgba(212, 163, 115, 0.25);
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(140, 90, 53, 0.35);
+            border-color: #D4A373;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #8C5A35, #6c4222);
+            color: #FEFAE0;
+            border-color: #D4A373;
+            box-shadow: 0 4px 15px rgba(140, 90, 53, 0.4);
+        }
+
+        /* Control Panel / Actions */
         .action-bar {
             max-width: 900px;
-            margin: 0 auto 25px;
+            margin: 0 auto 22px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 10px;
@@ -201,12 +217,12 @@
             box-shadow: 0 6px 20px rgba(234, 67, 53, 0.5);
         }
 
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25D366, #128C7E);
+        .btn-telegram {
+            background: linear-gradient(135deg, #0088cc, #0077b5);
             color: #ffffff;
         }
 
-        .btn-whatsapp:hover {
+        .btn-telegram:hover {
             transform: translateY(-2px);
         }
 
@@ -237,10 +253,10 @@
             opacity: 1;
         }
 
-        /* Target Post Brief Banner */
+        /* Brief Banner */
         .post-brief {
             max-width: 900px;
-            margin: 0 auto 20px;
+            margin: 0 auto 18px;
             background: linear-gradient(135deg, #2A1F1A, #1d1512);
             border: 1px dashed #D4A373;
             border-radius: 12px;
@@ -253,7 +269,7 @@
         }
 
         .post-brief-content {
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             color: #FAEDCD;
             line-height: 1.5;
         }
@@ -261,15 +277,15 @@
         .post-brief-tag {
             background: #8C5A35;
             color: #FEFAE0;
-            padding: 3px 8px;
+            padding: 3px 10px;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             display: inline-block;
-            margin-left: 4px;
+            margin-left: 6px;
         }
 
-        /* Preview Area Frame */
+        /* Preview Wrapper */
         .preview-wrapper {
             max-width: 650px;
             margin: 0 auto;
@@ -289,7 +305,7 @@
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(140, 90, 53, 0.2);
             color: #6D4C41;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
         }
 
         /* Modal */
@@ -395,303 +411,589 @@
     <!-- Header -->
     <header class="app-header">
         <a href="https://mostafayasser.online" class="brand-badge" target="_blank">
-            <img src="assets/logo.png" alt="جذع">
+            <img src="/assets/logo.png" alt="جذع">
             <div>
                 <div class="brand-title">جذع <span>.</span></div>
-                <div class="brand-sub">مصطفى ياسر | Full-Stack Developer</div>
+                <div class="brand-sub">منصة قوالب البريد الإلكتروني الاحترافية</div>
             </div>
         </a>
-        <div style="font-size: 0.85rem; color: #D4A373; font-weight: bold;">
-            <i class="fas fa-envelope-open-text"></i> إيميل التقديم (بخط ثمانية الأصلي)
+
+        <div style="font-size: 0.85rem; color: #D4A373;">
+            مصطفى ياسر | Full Stack Developer
         </div>
     </header>
 
-    <!-- Job Info Brief Banner -->
+    <!-- Template Switcher Tabs -->
+    <nav class="tabs-nav" id="tabs-nav">
+        <button class="tab-btn active" onclick="switchTemplate('client_reply')">
+            <i class="fas fa-reply"></i> رد على استفسار عميل (إسلام صبحي)
+        </button>
+        <button class="tab-btn" onclick="switchTemplate('general_job')">
+            <i class="fas fa-briefcase"></i> طلب انضمام لوظيفة عام
+        </button>
+        <button class="tab-btn" onclick="switchTemplate('aboelnsr_job')">
+            <i class="fas fa-hospital"></i> طلب توظيف (مركز د. أبو النصر)
+        </button>
+        <button class="tab-btn" onclick="switchTemplate('freelance_pitch')">
+            <i class="fas fa-laptop-code"></i> عرض خدمات برمجة وتطوير ويب
+        </button>
+    </nav>
+
+    <!-- Brief Banner -->
     <div class="post-brief">
-        <div class="post-brief-content">
-            <strong>🎯 تفاصيل الإعلان:</strong>
-            <span class="post-brief-tag">مركز د. أبو النصر للعظام والطب الرياضي</span>
-            <span class="post-brief-tag"><i class="fas fa-subway"></i> الدقي</span>
-            <span class="post-brief-tag">Full-Stack Developer</span>
-            <span style="margin-right: 8px; color: #A3B18A; font-size: 0.8rem;">
-                البريد: <strong>dr.aboelnsr@icloud.com</strong>
-            </span>
+        <div class="post-brief-content" id="template-brief-content">
+            <span class="post-brief-tag" id="template-tag">استفسار عميل</span>
+            <span id="template-desc">نموذج رد مهني يعتذر بلباقة عن التأخير ويطلب تفاصيل ونوع ومميزات المشروع.</span>
         </div>
     </div>
 
-    <!-- Actions Control Bar -->
-    <div class="action-bar">
-        <button class="btn-action btn-primary-action" id="copy-rich-btn" onclick="copyRichEmail()">
+    <!-- Action Bar -->
+    <section class="action-bar">
+        <button class="btn-action btn-primary-action" onclick="copyHtmlEmail()">
             <i class="fas fa-copy"></i>
-            <span>نسخ للإيميل (تنسيق لـ Gmail / Outlook)</span>
+            <span>نسخ كود الـ HTML المنسق</span>
         </button>
+
+        <button class="btn-action btn-secondary-action" onclick="copyPlainText()">
+            <i class="fas fa-file-alt"></i>
+            <span>نسخ كـ نص عادي (Plain Text)</span>
+        </button>
+
+        <a id="btn-open-gmail" href="#" target="_blank" class="btn-action btn-gmail">
+            <i class="fab fa-google"></i>
+            <span>فتح في بريد Gmail</span>
+        </a>
+
+        <a id="btn-open-telegram" href="https://t.me/mostafayasserkamel" target="_blank" class="btn-action btn-telegram">
+            <i class="fab fa-telegram"></i>
+            <span>تليجرام المباشر</span>
+        </a>
 
         <button class="btn-action btn-secondary-action" onclick="openCodeModal()">
             <i class="fas fa-code"></i>
-            <span>عرض ونسخ كود HTML</span>
+            <span>معاينة الكود المصدري</span>
         </button>
+    </section>
 
-        <a class="btn-action btn-gmail" id="gmail-compose-link" href="#" target="_blank" onclick="prepareGmailCompose()">
-            <i class="fas fa-paper-plane"></i>
-            <span>فتح في Gmail</span>
-        </a>
-
-        <a class="btn-action btn-whatsapp" href="https://wa.me/201001239131?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%20%D8%A3%D8%A8%D9%88%20%D8%A7%D9%84%D9%86%D8%B5%D8%B1%D8%8C%20%D8%AA%D9%88%D8%A7%D8%B5%D9%84%D8%AA%20%D9%85%D8%B9%20%D8%AD%D8%B6%D8%B1%D8%AA%D9%83%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%20%D9%88%D8%B8%D9%8A%D9%81%D8%A9%20Full-Stack%20Developer" target="_blank">
-            <i class="fab fa-whatsapp"></i>
-            <span>واتساب المركز</span>
-        </a>
-    </div>
-
-    <!-- Email Rendered Container -->
-    <div class="preview-wrapper">
+    <!-- Preview Container -->
+    <main class="preview-wrapper">
         <div class="preview-header-hint">
-            <span><i class="fas fa-eye"></i> معاينة شكل الإيميل</span>
-            <span><i class="fas fa-check-circle" style="color: #2e7d32;"></i> خط ثمانية Serif الأصلي</span>
+            <span>✨ المعاينة الحية كما ستظهر في بريد العميل:</span>
+            <span id="preview-subject-label" style="font-weight: 900; color: #8C5A35;"></span>
         </div>
 
-        <!-- ============================================================= -->
-        <!-- START OF ACTUAL EMAIL HTML (Copyable & Client-Safe Table)   -->
-        <!-- ============================================================= -->
-        <div id="email-content-box" style="direction: rtl; text-align: right; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', 'Amiri', 'Traditional Arabic', serif; font-weight: bold; line-height: 1.85; color: #3E2723; background-color: #FAEDCD; padding: 14px; border-radius: 14px;">
-            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #FEFAE0; border: 1.5px solid #D4A373; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(62,39,35,0.08); font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', 'Amiri', 'Traditional Arabic', serif; font-weight: bold;">
-                
-                <!-- Email Header Banner -->
-                <tr>
-                    <td style="background: linear-gradient(135deg, #8C5A35 0%, #6c4222 100%); background-color: #8C5A35; padding: 22px 20px; text-align: right; border-bottom: 3px solid #D4A373; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td style="vertical-align: middle;">
-                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td style="vertical-align: middle; padding-left: 14px;">
-                                                <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
-                                            </td>
-                                            <td style="vertical-align: middle;">
-                                                <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                                                    جذع <span style="color: #E9EDC9;">.</span>
-                                                </div>
-                                                <div style="font-size: 13.5px; color: #FAEDCD; font-weight: bold; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                                                    مصطفى ياسر | Full-Stack Developer
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="text-align: left; vertical-align: middle;">
-                                    <span style="display: inline-block; background-color: #FEFAE0; color: #8C5A35; padding: 5px 14px; border-radius: 16px; font-size: 13px; font-weight: bold; border: 1px solid #D4A373; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                                        💼 طلب توظيف
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <!-- Email Body Content -->
-                <tr>
-                    <td style="padding: 26px 22px 20px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', 'Amiri', 'Traditional Arabic', serif; font-weight: bold;">
-                        
-                        <!-- Salutation -->
-                        <div style="font-size: 20px; font-weight: 900; color: #8C5A35; margin-bottom: 14px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                            السلام عليكم دكتور أبو النصر،
-                        </div>
-
-                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
-                            أتمنى أن تكون بخير وفي أتم الصحة والعافية.
-                        </p>
-
-                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
-                            اطلعت على إعلانكم عن وظيفة <strong style="color: #8C5A35;">Full-Stack Developer</strong> بـ <strong style="color: #8C5A35;">مركز الدكتور أبو النصر للعظام والطب الرياضي</strong>، ويسعدني التقدم للوظيفة والانضمام إلى فريق العمل لديكم (من مقر المركز بالدقي).
-                        </p>
-
-                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
-                            أعمل في تطوير البرمجيات وتطبيقات الويب المتكاملة، ولدي خبرة في بناء الأنظمة الطبية لإدارة العيادات والمراكز:
-                        </p>
-
-                        <!-- Concise Wateen Box -->
-                        <div style="background-color: #FAEDCD; border: 1.5px solid #D4A373; border-radius: 10px; padding: 14px 16px; margin: 14px 0 18px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                            <div style="font-size: 16px; font-weight: 900; color: #8C5A35; margin-bottom: 4px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                                🏥 نظام وتين لإدارة عيادات ومراكز الأسنان:
-                            </div>
-                            <div style="font-size: 15px; color: #3E2723; line-height: 1.7; font-weight: bold; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                                نظام سحابي متكامل قمت بتطويره لإدارة سجلات المرضى والمواعيد والحسابات:
-                                <a href="https://wateensystem.online" target="_blank" style="color: #8C5A35; font-weight: 900; text-decoration: underline; direction: ltr; display: inline-block; margin-right: 4px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">wateensystem.online</a>
-                            </div>
-                        </div>
-
-                        <!-- Links Section -->
-                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 12px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
-                            يمكنكم الاطلاع على نماذج أعمالي ومشاريعي:
-                        </p>
-
-                        <!-- Buttons Table with explicit spacing -->
-                        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 10px 0 20px;">
-                            <tr>
-                                <td align="center">
-                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <!-- Projects Button -->
-                                            <td style="border-radius: 8px; background-color: #8C5A35; text-align: center;">
-                                                <a href="https://mostafayasser.online/projects" target="_blank" style="font-size: 15px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold; color: #FEFAE0; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px; white-space: nowrap;">
-                                                    🌐 معرض المشاريع (Portfolio)
-                                                </a>
-                                            </td>
-
-                                            <!-- Explicit Spacer Column -->
-                                            <td width="20" style="width: 20px; font-size: 1px; line-height: 1px;">&nbsp;</td>
-
-                                            <!-- LinkedIn Button -->
-                                            <td style="border-radius: 8px; background-color: #FAEDCD; border: 1.5px solid #D4A373; text-align: center;">
-                                                <a href="https://www.linkedin.com/in/mostafayasserdev/" target="_blank" style="font-size: 15px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold; color: #8C5A35; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px; white-space: nowrap;">
-                                                    💼 حساب LinkedIn
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <!-- Resume Attachment Notice -->
-                        <div style="background-color: #FEFAE0; border-right: 4px solid #8C5A35; padding: 10px 14px; margin: 14px 0 16px; font-size: 15.5px; color: #6D4C41; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
-                            📎 <strong>مرفق لحضراتكم السيرة الذاتية (CV) للاطلاع،</strong> ويسعدني الحصول على فرصة لمناقشة خبراتي ومدى ملاءمتي للوظيفة.
-                        </div>
-
-                        <p style="font-size: 16.5px; line-height: 1.85; color: #3E2723; margin: 0 0 22px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
-                            شكرًا لوقتكم، وأتطلع لفرصة التعاون معكم.
-                        </p>
-
-                        <!-- Signature Box -->
-                        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top: 2px dashed #D4A373; padding-top: 16px;">
-                            <tr>
-                                <td style="vertical-align: middle; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                                    <div style="font-size: 15px; color: #6D4C41; margin-bottom: 3px; font-weight: bold;">مع خالص التحية،</div>
-                                    <div style="font-size: 21px; font-weight: 900; color: #8C5A35; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
-                                        مصطفى ياسر
-                                    </div>
-                                    <div style="font-size: 14.5px; font-weight: bold; color: #6D4C41; margin-bottom: 8px;">
-                                        Full-Stack Developer
-                                    </div>
-                                    <div style="font-size: 14.5px; color: #3E2723; line-height: 1.8; font-weight: bold;">
-                                        📧 البريد: <a href="mailto:moustafa0yasser123@gmail.com" style="color: #8C5A35; text-decoration: underline; font-weight: 900;">moustafa0yasser123@gmail.com</a><br>
-                                        📱 الهاتف: <a href="tel:+201092991028" style="color: #8C5A35; text-decoration: none; font-weight: 900; direction: ltr; display: inline-block;">+20 109 299 1028</a><br>
-                                        🌐 الموقع: <a href="https://mostafayasser.online" target="_blank" style="color: #8C5A35; text-decoration: none; font-weight: 900;">mostafayasser.online</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </td>
-                </tr>
-
-                <!-- Email Footer Note -->
-                <tr>
-                    <td style="background-color: #FAEDCD; padding: 12px 20px; text-align: center; border-top: 1px solid #D4A373; font-size: 12.5px; color: #6D4C41; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
-                        مركز د. أبو النصر للعظام والطب الرياضي - الدقي
-                    </td>
-                </tr>
-
-            </table>
+        <div id="email-preview-container">
+            <!-- Dynamic email preview renders here -->
         </div>
-        <!-- ============================================================= -->
-        <!-- END OF ACTUAL EMAIL HTML                                     -->
-        <!-- ============================================================= -->
+    </main>
 
-    </div>
-
-    <!-- Code View Modal -->
+    <!-- Modal for Raw Code -->
     <div class="modal-overlay" id="code-modal">
         <div class="modal-card">
             <div class="modal-head">
-                <h3><i class="fas fa-code"></i> كود HTML المنسق للإيميل</h3>
-                <button class="modal-close" onclick="closeCodeModal()">&times;</button>
+                <h3>كود الـ HTML المصدري للقالب</h3>
+                <button class="modal-close" onclick="closeCodeModal()">×</button>
             </div>
             <div class="modal-body">
-                <p style="color: #FAEDCD; font-size: 0.9rem; margin-bottom: 12px;">
-                    يمكنك نسخ هذا الكود واستخدامه في أدوات الإرسال البرمجي (Nodemailer, Python, Mailchimp, أو خاصية Insert HTML في برامج البريد):
-                </p>
-                <textarea id="raw-html-code" class="code-area" readonly></textarea>
+                <textarea class="code-area" id="modal-code-area" readonly></textarea>
             </div>
             <div class="modal-footer">
-                <button class="btn-action btn-secondary-action" onclick="closeCodeModal()">إغلاق</button>
-                <button class="btn-action btn-primary-action" onclick="copyRawCode()">
+                <button class="btn-action btn-primary-action" onclick="copyModalCode()">
                     <i class="fas fa-copy"></i> نسخ الكود
+                </button>
+                <button class="btn-action btn-secondary-action" onclick="closeCodeModal()">
+                    إغلاق
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Component -->
-    <div class="toast" id="toast-msg">
-        <i class="fas fa-check-circle" style="color: #A3B18A; font-size: 1.2rem;"></i>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle" style="color: #2e7d32;"></i>
         <span id="toast-text">تم النسخ بنجاح!</span>
     </div>
 
     <script>
-        // Set Gmail Compose Link with Subject and Body
-        const RECIPIENT = "dr.aboelnsr@icloud.com";
-        const SUBJECT = "طلب انضمام لوظيفة Full-Stack Developer - مصطفى ياسر";
+        // Templates Database
+        const TEMPLATES = {
+            client_reply: {
+                title: "رد بخصوص طلب عمل ومشروع جديد",
+                tag: "استفسار عميل / مشروع",
+                desc: "نموذج رد يعتذر بلباقة عن التأخير بسبب انشغال العمل، ويطلب توضيح طبيعة ونوع المشروع والمميزات المطلوبة.",
+                subject: "رد بخصوص استفساركم عن مشروع برمجي | مصطفى ياسر (جذع)",
+                recipient: "islamsobhi@gmail.com",
+                plainText: `السلام عليكم وأهلاً بك أستاذ إسلام،
 
-        function prepareGmailCompose() {
-            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(RECIPIENT)}&su=${encodeURIComponent(SUBJECT)}`;
-            document.getElementById('gmail-compose-link').href = gmailUrl;
+أتمنى أن تكون بخير وفي أتم الصحة والعافية.
+
+🙏 أعتذر جداً لحضرتك عن التأخر في الرد نظراً لضغط وانشغال العمل خلال الفترة الماضية.
+
+شكراً جزيلاً لتواصلك واهتمامك عبر موقعي (جذع)، ويسعدني ويشرفني جداً التعاون معك والعمل على تنفيذ المشروع المطلوب بأعلى كفاءة واحترافية تقنية.
+
+🌱 يرجى إخباري بكافة تفاصيل ومتطلبات المشروع لنبدأ الترتيب والعمل:
+1. طبيعة ونوع المشروع: ما هي الفكرة العامة للعمل المطلوب (موقع تعريفي، متجر إلكتروني، منصة ويب، لوحة تحكم، تطبيق ويب، أو تعديل وتطوير نظام حالي)؟
+2. المميزات والوظائف المطلوبة: ما هي أهم الخصائص والصفحات التي ترغب في تواجدها؟
+3. أي تفاصيل أو ملاحظات إضافية: (مثل نماذج لمواقع مشابهة تعجبك، أو موعد محدد ترغب في استلام العمل فيه).
+
+يمكنك الرد مباشرة على هذا الإيميل بالتفاصيل، أو مراسلتي عبر تليجرام لنقاش أسرع وتحديد كافة النقاط:
+💬 تليجرام: https://t.me/mostafayasserkamel
+🌐 معرض الأعمال والمشاريع: https://mostafayasser.online/projects
+
+في انتظار توضيحك للتفاصيل لنبدأ معاً بإذن الله.
+
+مع خالص التحية والتقدير،
+مصطفى ياسر
+مطور برمجيات | مؤسس موقع جذع
+https://mostafayasser.online`,
+                htmlContent: `
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #FEFAE0; border: 1.5px solid #D4A373; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(62,39,35,0.08); font-family: 'thmanyah serif text', 'Thmanyah', 'Amiri', serif; font-weight: bold; direction: rtl; text-align: right; color: #3E2723;">
+        <tr>
+            <td style="background: linear-gradient(135deg, #8C5A35 0%, #6c4222 100%); background-color: #8C5A35; padding: 22px 20px; text-align: right; border-bottom: 3px solid #D4A373;">
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="vertical-align: middle; padding-left: 14px;">
+                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px;">جذع <span style="color: #E9EDC9;">.</span></div>
+                                        <div style="font-size: 13.5px; color: #FAEDCD; font-weight: bold;">مصطفى ياسر | مطور برمجيات وحلول ويب</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            <span style="display: inline-block; background-color: #FEFAE0; color: #8C5A35; padding: 5px 14px; border-radius: 16px; font-size: 13px; font-weight: bold; border: 1px solid #D4A373;">💬 استفسار مشروع</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 26px 22px 20px; font-weight: bold;">
+                <div style="font-size: 20px; font-weight: 900; color: #8C5A35; margin-bottom: 14px;">أهلاً بك أستاذ إسلام،</div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">أتمنى أن تكون بخير وفي أتم الصحة والعافية.</p>
+                <div style="background-color: rgba(140, 90, 53, 0.08); border-right: 4px solid #8C5A35; border-radius: 6px; padding: 12px 16px; margin: 14px 0 18px; font-size: 16px; line-height: 1.8; color: #3E2723;">
+                    🙏 <strong>أعتذر جداً لحضرتك عن التأخر في الرد</strong> نظراً لضغط وانشغال العمل خلال الفترة الماضية.
+                </div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">شكراً جزيلاً لتواصلك واهتمامك عبر موقعي (<strong style="color: #8C5A35;">جذع</strong>)، ويسعدني ويشرفني التعاون معك وتنفيذ العمل المطلوب بأعلى كفاءة واحترافية.</p>
+                <div style="background-color: #FAEDCD; border: 1.5px solid #D4A373; border-radius: 12px; padding: 18px 20px; margin: 18px 0;">
+                    <div style="font-size: 17px; font-weight: 900; color: #8C5A35; margin-bottom: 10px;">🌱 يرجى إخباري بكافة تفاصيل المشروع لنبدأ الترتيب والعمل:</div>
+                    <ul style="margin: 0; padding-right: 20px; font-size: 15.5px; line-height: 1.8; color: #3E2723;">
+                        <li style="margin-bottom: 8px;"><strong>طبيعة ونوع المشروع:</strong> ما هي الفكرة العامة للعمل المطلوب (موقع تعريفي، متجر، لوحة تحكم، تطبيق ويب، أو تعديل وتطوير نظام حالي)؟</li>
+                        <li style="margin-bottom: 8px;"><strong>المميزات والوظائف المطلوبة:</strong> ما هي أهم الخصائص والصفحات التي ترغب في تواجدها؟</li>
+                        <li><strong>أي تفاصيل أو ملاحظات إضافية:</strong> (مثل نماذج لمواقع مشابهة تعجبك، أو موعد محدد ترغب في استلام العمل فيه).</li>
+                    </ul>
+                </div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 16px 0;">يمكنك الرد مباشرة على هذا الإيميل بالتفاصيل، أو مراسلتي عبر تليجرام لنقاش أسرع وتحديد كافة النقاط:</p>
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 15px 0 22px;">
+                    <tr>
+                        <td align="center">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="border-radius: 8px; background-color: #8C5A35; text-align: center;">
+                                        <a href="https://t.me/mostafayasserkamel" target="_blank" style="font-size: 15px; font-weight: bold; color: #FEFAE0; text-decoration: none; padding: 11px 22px; display: block; border-radius: 8px;">💬 تواصل عبر تليجرام</a>
+                                    </td>
+                                    <td width="15" style="width: 15px;">&nbsp;</td>
+                                    <td style="border-radius: 8px; background-color: #FAEDCD; border: 1.5px solid #D4A373; text-align: center;">
+                                        <a href="https://mostafayasser.online/projects" target="_blank" style="font-size: 15px; font-weight: bold; color: #8C5A35; text-decoration: none; padding: 11px 22px; display: block; border-radius: 8px;">🌐 معرض الأعمال</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <p style="font-size: 16.5px; line-height: 1.85; color: #3E2723; margin: 0 0 10px 0;">في انتظار توضيحك للتفاصيل لنبدأ معاً بإذن الله.</p>
+                <div style="margin-top: 24px; padding-top: 14px; border-top: 1px dashed #D4A373;">
+                    <div style="font-size: 17px; font-weight: 900; color: #8C5A35;">مع خالص التحية والتقدير،</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #3E2723; margin-top: 4px;">مصطفى ياسر</div>
+                    <div style="font-size: 13.5px; color: #6D4C41; margin-top: 2px;">مطور برمجيات | مؤسس مشروع جذع</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #FAEDCD; padding: 16px 20px; text-align: center; border-top: 1px solid #D4A373; font-size: 13px; color: #6D4C41; font-weight: bold;">
+                <div>الموقع: <a href="https://mostafayasser.online" target="_blank" style="color: #8C5A35; text-decoration: underline;">mostafayasser.online</a> &nbsp;|&nbsp; البريد: <a href="mailto:moustafa0yasser123@gmail.com" style="color: #8C5A35; text-decoration: underline;">moustafa0yasser123@gmail.com</a></div>
+                <div style="margin-top: 6px; font-size: 12px; color: #8C5A35;">🌱 جذع — حكايات برمجية تنمو بروح فنية</div>
+            </td>
+        </tr>
+    </table>`
+            },
+
+            general_job: {
+                title: "طلب انضمام لوظيفة Full-Stack Developer",
+                tag: "توظيف / فرصة عمل",
+                desc: "قالب عام للتقديم على وظائف تطوير الويب (Full Stack / Next.js / React) للشركات والمنظمات.",
+                subject: "طلب انضمام لوظيفة Full-Stack Developer - مصطفى ياسر",
+                recipient: "",
+                plainText: `السلام عليكم ورحمة الله وبركاته،
+
+أتمنى أن تكونوا بخير وفي أتم الصحة والعافية.
+
+اطلعت على متطلبات الوظيفة الشاغرة لديكم لمطور برمجيات (Full-Stack Developer)، ويسعدني ويشرفني التقدم للانضمام إلى فريقكم المتميز.
+
+أنا مطور برمجيات متخصص في بناء تطبيقات ومواقع الويب الحديثة، ولدي خبرة متقدمة في تقنيات (Next.js, React.js, TypeScript, Node.js, Firebase) وتطوير الواجهات وتجارب المستخدم السريعة.
+
+نماذج من مشاريعي السابقة:
+🌐 معرض الأعمال: https://mostafayasser.online/projects
+💼 حساب LinkedIn: https://www.linkedin.com/in/mostafayasserdev/
+💻 حساب GitHub: https://github.com/mostafaYasserDev
+
+مرفق سيرتي الذاتية للاطلاع عليها، ويسعدني تحديد موعد لمقابلة عمل لمناقشة كيف يمكنني المساهمة في نجاح فريقكم.
+
+شاكر ومقدر وقتكم واهتمامكم.
+
+مع خالص التحية،
+مصطفى ياسر
+مطور برمجيات
+01092991028 | moustafa0yasser123@gmail.com`,
+                htmlContent: `
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #FEFAE0; border: 1.5px solid #D4A373; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(62,39,35,0.08); font-family: 'thmanyah serif text', 'Thmanyah', 'Amiri', serif; font-weight: bold; direction: rtl; text-align: right; color: #3E2723;">
+        <tr>
+            <td style="background: linear-gradient(135deg, #8C5A35 0%, #6c4222 100%); background-color: #8C5A35; padding: 22px 20px; text-align: right; border-bottom: 3px solid #D4A373;">
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="vertical-align: middle; padding-left: 14px;">
+                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px;">جذع <span style="color: #E9EDC9;">.</span></div>
+                                        <div style="font-size: 13.5px; color: #FAEDCD; font-weight: bold;">مصطفى ياسر | Full-Stack Developer</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            <span style="display: inline-block; background-color: #FEFAE0; color: #8C5A35; padding: 5px 14px; border-radius: 16px; font-size: 13px; font-weight: bold; border: 1px solid #D4A373;">💼 طلب توظيف</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 26px 22px 20px; font-weight: bold;">
+                <div style="font-size: 20px; font-weight: 900; color: #8C5A35; margin-bottom: 14px;">السلام عليكم ورحمة الله،</div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">أتمنى أن تكونوا بخير وفي أتم الصحة والعافية.</p>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">اطلعت على متطلبات وظيفة <strong style="color: #8C5A35;">Full-Stack Developer</strong> لديكم، ويسعدني التقدم للانضمام إلى فريق العمل لديكم والمساهمة بخبرتي في تطوير وتصميم تطبيقات الويب الحديثة.</p>
+                <div style="background-color: #FAEDCD; border: 1.5px solid #D4A373; border-radius: 10px; padding: 14px 16px; margin: 14px 0 18px;">
+                    <div style="font-size: 16px; font-weight: 900; color: #8C5A35; margin-bottom: 6px;">🚀 أبرز الخبرات والتقنيات:</div>
+                    <div style="font-size: 15px; color: #3E2723; line-height: 1.8;">تطوير تطبيقات الويب المتكاملة باستخدام Next.js (App Router)، React، TypeScript، بنية سحابية Firebase، وتصميم واجهات تفاعلية سريعة ومتوافقة 100% مع معايير الـ SEO.</div>
+                </div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 12px 0;">يمكنكم الاطلاع على نماذج أعمالي وسيرتي الذاتية:</p>
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 10px 0 20px;">
+                    <tr>
+                        <td align="center">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="border-radius: 8px; background-color: #8C5A35; text-align: center;">
+                                        <a href="https://mostafayasser.online/projects" target="_blank" style="font-size: 15px; font-weight: bold; color: #FEFAE0; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px;">🌐 معرض المشاريع</a>
+                                    </td>
+                                    <td width="15" style="width: 15px;">&nbsp;</td>
+                                    <td style="border-radius: 8px; background-color: #FAEDCD; border: 1.5px solid #D4A373; text-align: center;">
+                                        <a href="https://www.linkedin.com/in/mostafayasserdev/" target="_blank" style="font-size: 15px; font-weight: bold; color: #8C5A35; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px;">💼 حساب LinkedIn</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <p style="font-size: 16.5px; line-height: 1.85; color: #3E2723; margin: 0 0 10px 0;">يسعدني تحديد موعد لمقابلة عمل لمناقشة تفاصيل التعاون.</p>
+                <div style="margin-top: 24px; padding-top: 14px; border-top: 1px dashed #D4A373;">
+                    <div style="font-size: 17px; font-weight: 900; color: #8C5A35;">مع خالص التحية والتقدير،</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #3E2723; margin-top: 4px;">مصطفى ياسر</div>
+                    <div style="font-size: 13.5px; color: #6D4C41; margin-top: 2px;">مطور برمجيات | مؤسس مشروع جذع</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #FAEDCD; padding: 16px 20px; text-align: center; border-top: 1px solid #D4A373; font-size: 13px; color: #6D4C41; font-weight: bold;">
+                <div>الموقع: <a href="https://mostafayasser.online" target="_blank" style="color: #8C5A35; text-decoration: underline;">mostafayasser.online</a> &nbsp;|&nbsp; الهاتف: <span dir="ltr">+20 109 299 1028</span></div>
+            </td>
+        </tr>
+    </table>`
+            },
+
+            aboelnsr_job: {
+                title: "طلب توظيف - مركز د. أبو النصر للعظام",
+                tag: "طلب توظيف مخصص",
+                desc: "قالب مخصص للتقديم على مركز د. أبو النصر للعظام والطب الرياضي مع تسليط الضوء على نظام وتين الطبي لإدارة العيادات.",
+                subject: "طلب انضمام لوظيفة Full-Stack Developer - مصطفى ياسر (مركز د. أبو النصر)",
+                recipient: "drahmedaboelnsr@gmail.com",
+                plainText: `السلام عليكم دكتور أبو النصر،
+
+أتمنى أن تكون بخير وفي أتم الصحة والعافية.
+
+اطلعت على إعلانكم عن وظيفة Full-Stack Developer بـ مركز الدكتور أبو النصر للعظام والطب الرياضي، ويسعدني التقدم للوظيفة والانضمام إلى فريق العمل لديكم (من مقر المركز بالدقي).
+
+أعمل في تطوير البرمجيات وتطبيقات الويب المتكاملة، ولدي خبرة في بناء الأنظمة الطبية لإدارة العيادات والمراكز:
+
+🏥 نظام وتين لإدارة عيادات ومراكز الأسنان:
+نظام سحابي متكامل قمت بتطويره لإدارة سجلات المرضى والمواعيد والحسابات:
+https://wateensystem.online
+
+يمكنكم الاطلاع على نماذج أعمالي ومشاريعي:
+🌐 معرض المشاريع: https://mostafayasser.online/projects
+💼 حساب LinkedIn: https://www.linkedin.com/in/mostafayasserdev/
+
+يسعدني تحديد موعد لمقابلة عمل بمقر المركز لمناقشة التفاصيل.
+
+مع خالص التحية والتقدير،
+مصطفى ياسر
+Full-Stack Developer
+01092991028 | moustafa0yasser123@gmail.com`,
+                htmlContent: `
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #FEFAE0; border: 1.5px solid #D4A373; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(62,39,35,0.08); font-family: 'thmanyah serif text', 'Thmanyah', 'Amiri', serif; font-weight: bold; direction: rtl; text-align: right; color: #3E2723;">
+        <tr>
+            <td style="background: linear-gradient(135deg, #8C5A35 0%, #6c4222 100%); background-color: #8C5A35; padding: 22px 20px; text-align: right; border-bottom: 3px solid #D4A373;">
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="vertical-align: middle; padding-left: 14px;">
+                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px;">جذع <span style="color: #E9EDC9;">.</span></div>
+                                        <div style="font-size: 13.5px; color: #FAEDCD; font-weight: bold;">مصطفى ياسر | Full-Stack Developer</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            <span style="display: inline-block; background-color: #FEFAE0; color: #8C5A35; padding: 5px 14px; border-radius: 16px; font-size: 13px; font-weight: bold; border: 1px solid #D4A373;">🏥 طلب توظيف</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 26px 22px 20px; font-weight: bold;">
+                <div style="font-size: 20px; font-weight: 900; color: #8C5A35; margin-bottom: 14px;">السلام عليكم دكتور أبو النصر،</div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">أتمنى أن تكون بخير وفي أتم الصحة والعافية.</p>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">اطلعت على إعلانكم عن وظيفة <strong style="color: #8C5A35;">Full-Stack Developer</strong> بـ <strong style="color: #8C5A35;">مركز الدكتور أبو النصر للعظام والطب الرياضي</strong>، ويسعدني التقدم للوظيفة والانضمام إلى فريق العمل لديكم (من مقر المركز بالدقي).</p>
+                <div style="background-color: #FAEDCD; border: 1.5px solid #D4A373; border-radius: 10px; padding: 14px 16px; margin: 14px 0 18px;">
+                    <div style="font-size: 16px; font-weight: 900; color: #8C5A35; margin-bottom: 4px;">🏥 نظام وتين لإدارة عيادات ومراكز الأسنان:</div>
+                    <div style="font-size: 15px; color: #3E2723; line-height: 1.7;">نظام سحابي متكامل قمت بتطويره لإدارة سجلات المرضى والمواعيد والحسابات: <a href="https://wateensystem.online" target="_blank" style="color: #8C5A35; font-weight: 900; text-decoration: underline; direction: ltr; display: inline-block;">wateensystem.online</a></div>
+                </div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 12px 0;">يمكنكم الاطلاع على نماذج أعمالي ومشاريعي:</p>
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 10px 0 20px;">
+                    <tr>
+                        <td align="center">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="border-radius: 8px; background-color: #8C5A35; text-align: center;">
+                                        <a href="https://mostafayasser.online/projects" target="_blank" style="font-size: 15px; font-weight: bold; color: #FEFAE0; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px;">🌐 معرض المشاريع</a>
+                                    </td>
+                                    <td width="15" style="width: 15px;">&nbsp;</td>
+                                    <td style="border-radius: 8px; background-color: #FAEDCD; border: 1.5px solid #D4A373; text-align: center;">
+                                        <a href="https://www.linkedin.com/in/mostafayasserdev/" target="_blank" style="font-size: 15px; font-weight: bold; color: #8C5A35; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px;">💼 حساب LinkedIn</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <p style="font-size: 16.5px; line-height: 1.85; color: #3E2723; margin: 0 0 10px 0;">يسعدني تحديد موعد لمقابلة عمل بمقر المركز لمناقشة التفاصيل.</p>
+                <div style="margin-top: 24px; padding-top: 14px; border-top: 1px dashed #D4A373;">
+                    <div style="font-size: 17px; font-weight: 900; color: #8C5A35;">مع خالص التحية والتقدير،</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #3E2723; margin-top: 4px;">مصطفى ياسر</div>
+                    <div style="font-size: 13.5px; color: #6D4C41; margin-top: 2px;">Full-Stack Developer | 01092991028</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #FAEDCD; padding: 16px 20px; text-align: center; border-top: 1px solid #D4A373; font-size: 13px; color: #6D4C41; font-weight: bold;">
+                <div>الموقع: <a href="https://mostafayasser.online" target="_blank" style="color: #8C5A35; text-decoration: underline;">mostafayasser.online</a> &nbsp;|&nbsp; البريد: <a href="mailto:moustafa0yasser123@gmail.com" style="color: #8C5A35; text-decoration: underline;">moustafa0yasser123@gmail.com</a></div>
+            </td>
+        </tr>
+    </table>`
+            },
+
+            freelance_pitch: {
+                title: "عرض خدمات تطوير وتصميم مواقع للشركات",
+                tag: "عرض خدمات / Freelance",
+                desc: "قالب ترويجي لتقديم عروض بناء وتطوير مواقع الويب والمتاجر والأنظمة للشركات والأنشطة التجارية.",
+                subject: "مقترح حلول برمجية وتطوير ويب احترافي | مصطفى ياسر - جذع",
+                recipient: "",
+                plainText: `السلام عليكم ورحمة الله،
+
+أتمنى أن تكونوا بخير وازدهار دائم لأعمالكم.
+
+أنا مصطفى ياسر، مطور برمجيات ومواقع ويب متكاملة (Full Stack Developer)، ومؤسس مشروع "جذع" للحلول البرمجية.
+
+أساعد الشركات ورواد الأعمال في تحويل أفكارهم إلى منصات ومواقع ويب سريعة وجذابة تحقق أعلى عائد وتجربة مستخدم ممتازة:
+🔹 برمجة مواقع الشركات والمتاجر الإلكترونية
+🔹 بناء لوحات التحكم والأنظمة السحابية
+🔹 تسريع المواقع وتصدر محركات البحث (SEO)
+
+معرض أعمالي ومشاريعي السابقة:
+🌐 https://mostafayasser.online/projects
+
+يسعدني التحدث معكم لبحث كيف يمكننا تطوير حضوركم الرقمي وبناء حل برمجي يناسب تطلعاتكم.
+
+مع أطيب التحيات،
+مصطفى ياسر
+01092991028 | moustafa0yasser123@gmail.com`,
+                htmlContent: `
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #FEFAE0; border: 1.5px solid #D4A373; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(62,39,35,0.08); font-family: 'thmanyah serif text', 'Thmanyah', 'Amiri', serif; font-weight: bold; direction: rtl; text-align: right; color: #3E2723;">
+        <tr>
+            <td style="background: linear-gradient(135deg, #8C5A35 0%, #6c4222 100%); background-color: #8C5A35; padding: 22px 20px; text-align: right; border-bottom: 3px solid #D4A373;">
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="vertical-align: middle; padding-left: 14px;">
+                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px;">جذع <span style="color: #E9EDC9;">.</span></div>
+                                        <div style="font-size: 13.5px; color: #FAEDCD; font-weight: bold;">مصطفى ياسر | حلول وتطوير البرمجيات</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            <span style="display: inline-block; background-color: #FEFAE0; color: #8C5A35; padding: 5px 14px; border-radius: 16px; font-size: 13px; font-weight: bold; border: 1px solid #D4A373;">🚀 عرض خدمات</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 26px 22px 20px; font-weight: bold;">
+                <div style="font-size: 20px; font-weight: 900; color: #8C5A35; margin-bottom: 14px;">السلام عليكم ورحمة الله،</div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">أتمنى لكم ولمؤسستكم دوام النجاح والازدهار.</p>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0;">أقدم خدمات تصميم وبرمجة مواقع وتطبيقات الويب المتقدمة لمساعدة الشركات في تعزيز حضورها الرقمي ومضاعفة مبيعاتها من خلال حلول تقنية سريعة وجذابة.</p>
+                <div style="background-color: #FAEDCD; border: 1.5px solid #D4A373; border-radius: 12px; padding: 16px 20px; margin: 16px 0;">
+                    <div style="font-size: 16.5px; font-weight: 900; color: #8C5A35; margin-bottom: 8px;">🌟 كيف يمكنني مساعدتكم؟</div>
+                    <ul style="margin: 0; padding-right: 20px; font-size: 15px; line-height: 1.8; color: #3E2723;">
+                        <li>بناء مواقع وتطبيقات ويب سريعة جداً بأحدث تقنيات Next.js و React.</li>
+                        <li>تصميم واجهات وتجارب مستخدم تزيد من تفاعل الزوار والتحويلات.</li>
+                        <li>تهيئة متقدمة لمحركات البحث (SEO) لضمان تصدركم للنتائج الأولى.</li>
+                    </ul>
+                </div>
+                <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 12px 0;">يسعدني اطلاعكم على معرض مشاريعي السابقة:</p>
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 10px 0 20px;">
+                    <tr>
+                        <td align="center">
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="border-radius: 8px; background-color: #8C5A35; text-align: center;">
+                                        <a href="https://mostafayasser.online/projects" target="_blank" style="font-size: 15px; font-weight: bold; color: #FEFAE0; text-decoration: none; padding: 11px 22px; display: block; border-radius: 8px;">🌐 تصفح معرض المشاريع</a>
+                                    </td>
+                                    <td width="15" style="width: 15px;">&nbsp;</td>
+                                    <td style="border-radius: 8px; background-color: #FAEDCD; border: 1.5px solid #D4A373; text-align: center;">
+                                        <a href="https://t.me/mostafayasserkamel" target="_blank" style="font-size: 15px; font-weight: bold; color: #8C5A35; text-decoration: none; padding: 11px 22px; display: block; border-radius: 8px;">💬 تواصل تليجرام</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <p style="font-size: 16.5px; line-height: 1.85; color: #3E2723; margin: 0 0 10px 0;">يسعدني التحدث معكم لبحث فرصة تعاون مثمرة.</p>
+                <div style="margin-top: 24px; padding-top: 14px; border-top: 1px dashed #D4A373;">
+                    <div style="font-size: 17px; font-weight: 900; color: #8C5A35;">مع أطيب التحيات،</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #3E2723; margin-top: 4px;">مصطفى ياسر</div>
+                    <div style="font-size: 13.5px; color: #6D4C41; margin-top: 2px;">مطور برمجيات | مؤسس مشروع جذع</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #FAEDCD; padding: 16px 20px; text-align: center; border-top: 1px solid #D4A373; font-size: 13px; color: #6D4C41; font-weight: bold;">
+                <div>الموقع: <a href="https://mostafayasser.online" target="_blank" style="color: #8C5A35; text-decoration: underline;">mostafayasser.online</a> &nbsp;|&nbsp; الهاتف: <span dir="ltr">+20 109 299 1028</span></div>
+            </td>
+        </tr>
+    </table>`
+            }
+        };
+
+        let currentKey = 'client_reply';
+
+        function renderCurrentTemplate() {
+            const tmpl = TEMPLATES[currentKey];
+            if (!tmpl) return;
+
+            document.getElementById('template-tag').textContent = tmpl.tag;
+            document.getElementById('template-desc').textContent = tmpl.desc;
+            document.getElementById('preview-subject-label').textContent = tmpl.subject;
+            document.getElementById('email-preview-container').innerHTML = tmpl.htmlContent;
+            document.getElementById('modal-code-area').value = tmpl.htmlContent.trim();
+
+            // Update Gmail Link
+            const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1" +
+                (tmpl.recipient ? "&to=" + encodeURIComponent(tmpl.recipient) : "") +
+                "&su=" + encodeURIComponent(tmpl.subject) +
+                "&body=" + encodeURIComponent(tmpl.plainText);
+            document.getElementById('btn-open-gmail').href = gmailUrl;
         }
-        prepareGmailCompose();
 
-        function showToast(message) {
-            const toast = document.getElementById('toast-msg');
-            const text = document.getElementById('toast-text');
-            text.innerText = message;
+        function switchTemplate(key) {
+            if (!TEMPLATES[key]) return;
+            currentKey = key;
+
+            // Update tab buttons
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            renderCurrentTemplate();
+            showToast('تم التبديل إلى: ' + TEMPLATES[key].title);
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = text;
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3000);
+            }, 2500);
         }
 
-        // Copy Rich Formatted HTML directly for pasting into Gmail/Outlook
-        async function copyRichEmail() {
-            const emailBox = document.getElementById('email-content-box');
-            try {
-                const htmlContent = emailBox.innerHTML;
-                const plainText = emailBox.innerText;
+        function copyHtmlEmail() {
+            const html = TEMPLATES[currentKey].htmlContent.trim();
+            navigator.clipboard.writeText(html).then(() => {
+                showToast('✅ تم نسخ كود الـ HTML بنجاح!');
+            }).catch(() => {
+                fallbackCopy(html);
+            });
+        }
 
-                const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-                const blobText = new Blob([plainText], { type: 'text/plain' });
+        function copyPlainText() {
+            const text = TEMPLATES[currentKey].plainText.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ تم نسخ النص بنجاح!');
+            }).catch(() => {
+                fallbackCopy(text);
+            });
+        }
 
-                if (navigator.clipboard && window.ClipboardItem) {
-                    const data = [new ClipboardItem({
-                        'text/html': blobHtml,
-                        'text/plain': blobText
-                    })];
-                    await navigator.clipboard.write(data);
-                    showToast('✨ تم نسخ الإيميل بخط ثمانية الكامل! الصقه في Gmail (Ctrl + V)');
-                } else {
-                    const range = document.createRange();
-                    range.selectNodeContents(emailBox);
-                    const sel = window.getSelection();
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                    document.execCommand('copy');
-                    sel.removeAllRanges();
-                    showToast('✨ تم النسخ! الصقه الآن في رسالتك البريدية (Ctrl + V)');
-                }
-            } catch (err) {
-                console.error('Copy rich error:', err);
-                const range = document.createRange();
-                range.selectNodeContents(emailBox);
-                const sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-                document.execCommand('copy');
-                sel.removeAllRanges();
-                showToast('✨ تم النسخ! الصقه الآن في رسالتك البريدية (Ctrl + V)');
-            }
+        function copyModalCode() {
+            const code = document.getElementById('modal-code-area').value;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('✅ تم نسخ كود القالب!');
+                closeCodeModal();
+            });
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('✅ تم النسخ بنجاح!');
         }
 
         function openCodeModal() {
-            const emailBox = document.getElementById('email-content-box');
-            const codeArea = document.getElementById('raw-html-code');
-            codeArea.value = emailBox.innerHTML.trim();
             document.getElementById('code-modal').classList.add('active');
         }
 
@@ -699,21 +1001,10 @@
             document.getElementById('code-modal').classList.remove('active');
         }
 
-        function copyRawCode() {
-            const codeArea = document.getElementById('raw-html-code');
-            codeArea.select();
-            document.execCommand('copy');
-            showToast('✔ تم نسخ كود HTML إلى الحافظة!');
-            closeCodeModal();
-        }
-
-        window.onclick = function (event) {
-            const modal = document.getElementById('code-modal');
-            if (event.target === modal) {
-                closeCodeModal();
-            }
-        };
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCurrentTemplate();
+        });
     </script>
 </body>
-
 </html>
