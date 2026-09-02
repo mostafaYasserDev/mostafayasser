@@ -15,6 +15,24 @@ interface ServiceData {
 
 const SITE_URL = 'https://mostafayasser.online';
 
+export async function generateStaticParams() {
+  try {
+    const snap = await getDocs(collection(db, 'services'));
+    const paramsList: { id: string }[] = [];
+    snap.forEach((d) => {
+      const data = d.data();
+      if (data.slug) {
+        paramsList.push({ id: data.slug });
+      }
+      paramsList.push({ id: d.id });
+    });
+    return paramsList;
+  } catch (err) {
+    console.error('Error generating static params for services:', err);
+    return [];
+  }
+}
+
 async function fetchService(rawId: string): Promise<ServiceData | null> {
   const decodedId = decodeURIComponent(rawId);
   try {

@@ -16,6 +16,24 @@ interface ArticleData {
 
 const SITE_URL = 'https://mostafayasser.online';
 
+export async function generateStaticParams() {
+  try {
+    const snap = await getDocs(collection(db, 'articles'));
+    const paramsList: { id: string }[] = [];
+    snap.forEach((d) => {
+      const data = d.data();
+      if (data.slug) {
+        paramsList.push({ id: data.slug });
+      }
+      paramsList.push({ id: d.id });
+    });
+    return paramsList;
+  } catch (err) {
+    console.error('Error generating static params for articles:', err);
+    return [];
+  }
+}
+
 async function fetchArticle(rawId: string): Promise<ArticleData | null> {
   const decodedId = decodeURIComponent(rawId);
   try {
