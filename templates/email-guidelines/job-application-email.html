@@ -169,7 +169,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 11px 16px;
+            padding: 12px 16px;
             border-radius: 10px;
             font-family: inherit;
             font-weight: bold;
@@ -179,6 +179,20 @@
             transition: all 0.25s ease;
             text-decoration: none;
             text-align: center;
+        }
+
+        .btn-gmail-copy {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: #FEFAE0;
+            border: 1px solid #A3B18A;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+            grid-column: span 1;
+        }
+
+        .btn-gmail-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.6);
+            background: linear-gradient(135deg, #388e3c, #2e7d32);
         }
 
         .btn-primary-action {
@@ -234,15 +248,15 @@
             transform: translateX(-50%) translateY(100px);
             background: #2A1F1A;
             color: #FEFAE0;
-            padding: 12px 26px;
+            padding: 14px 28px;
             border-radius: 50px;
             border: 2px solid #8C5A35;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             opacity: 0;
             transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             z-index: 9999;
@@ -425,16 +439,16 @@
 
     <!-- Template Switcher Tabs -->
     <nav class="tabs-nav" id="tabs-nav">
-        <button class="tab-btn active" onclick="switchTemplate('client_reply')">
+        <button class="tab-btn active" onclick="switchTemplate('client_reply', event)">
             <i class="fas fa-reply"></i> رد على استفسار عميل (إسلام صبحي)
         </button>
-        <button class="tab-btn" onclick="switchTemplate('general_job')">
+        <button class="tab-btn" onclick="switchTemplate('general_job', event)">
             <i class="fas fa-briefcase"></i> طلب انضمام لوظيفة عام
         </button>
-        <button class="tab-btn" onclick="switchTemplate('aboelnsr_job')">
+        <button class="tab-btn" onclick="switchTemplate('aboelnsr_job', event)">
             <i class="fas fa-hospital"></i> طلب توظيف (مركز د. أبو النصر)
         </button>
-        <button class="tab-btn" onclick="switchTemplate('freelance_pitch')">
+        <button class="tab-btn" onclick="switchTemplate('freelance_pitch', event)">
             <i class="fas fa-laptop-code"></i> عرض خدمات برمجة وتطوير ويب
         </button>
     </nav>
@@ -449,29 +463,40 @@
 
     <!-- Action Bar -->
     <section class="action-bar">
-        <button class="btn-action btn-primary-action" onclick="copyHtmlEmail()">
-            <i class="fas fa-copy"></i>
-            <span>نسخ كود الـ HTML المنسق</span>
+        <!-- 1. Rich Text Copy for direct pasting into Gmail compose -->
+        <button class="btn-action btn-gmail-copy" onclick="copyRichFormattedEmail()">
+            <i class="fas fa-paste"></i>
+            <span>نسخ للصق في Gmail مباشرة (Ctrl + V ملون)</span>
         </button>
 
+        <!-- 2. Copy Raw HTML -->
+        <button class="btn-action btn-primary-action" onclick="copyHtmlEmail()">
+            <i class="fas fa-code"></i>
+            <span>نسخ كود الـ HTML</span>
+        </button>
+
+        <!-- 3. Copy Plain Text -->
         <button class="btn-action btn-secondary-action" onclick="copyPlainText()">
             <i class="fas fa-file-alt"></i>
-            <span>نسخ كـ نص عادي (Plain Text)</span>
+            <span>نسخ كـ نص عادي</span>
         </button>
 
+        <!-- 4. Open Gmail Compose -->
         <a id="btn-open-gmail" href="#" target="_blank" class="btn-action btn-gmail">
             <i class="fab fa-google"></i>
             <span>فتح في بريد Gmail</span>
         </a>
 
+        <!-- 5. Telegram -->
         <a id="btn-open-telegram" href="https://t.me/mostafayasserkamel" target="_blank" class="btn-action btn-telegram">
             <i class="fab fa-telegram"></i>
-            <span>تليجرام المباشر</span>
+            <span>تليجرام</span>
         </a>
 
+        <!-- 6. View Raw Code Modal -->
         <button class="btn-action btn-secondary-action" onclick="openCodeModal()">
-            <i class="fas fa-code"></i>
-            <span>معاينة الكود المصدري</span>
+            <i class="fas fa-eye"></i>
+            <span>معاينة الكود</span>
         </button>
     </section>
 
@@ -935,14 +960,16 @@ Full-Stack Developer
             document.getElementById('btn-open-gmail').href = gmailUrl;
         }
 
-        function switchTemplate(key) {
+        function switchTemplate(key, e) {
             if (!TEMPLATES[key]) return;
             currentKey = key;
 
             // Update tab buttons
             const btns = document.querySelectorAll('.tab-btn');
             btns.forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if (e && e.currentTarget) {
+                e.currentTarget.classList.add('active');
+            }
 
             renderCurrentTemplate();
             showToast('تم التبديل إلى: ' + TEMPLATES[key].title);
@@ -954,7 +981,47 @@ Full-Stack Developer
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 2500);
+            }, 3000);
+        }
+
+        // Copy Rich Formatted HTML directly for pasting into Gmail (Ctrl + V with full colors & styles)
+        async function copyRichFormattedEmail() {
+            const emailBox = document.getElementById('email-preview-container');
+            try {
+                const htmlContent = emailBox.innerHTML;
+                const plainText = emailBox.innerText;
+
+                const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+                const blobText = new Blob([plainText], { type: 'text/plain' });
+
+                if (navigator.clipboard && window.ClipboardItem) {
+                    const data = [new ClipboardItem({
+                        'text/html': blobHtml,
+                        'text/plain': blobText
+                    })];
+                    await navigator.clipboard.write(data);
+                    showToast('✨ تم النسخ بتنسيق Gmail الملون! الصقه الآن (Ctrl + V)');
+                } else {
+                    const range = document.createRange();
+                    range.selectNodeContents(emailBox);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    document.execCommand('copy');
+                    sel.removeAllRanges();
+                    showToast('✨ تم النسخ! الصقه الآن في Gmail (Ctrl + V)');
+                }
+            } catch (err) {
+                console.error('Rich copy error:', err);
+                const range = document.createRange();
+                range.selectNodeContents(emailBox);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                document.execCommand('copy');
+                sel.removeAllRanges();
+                showToast('✨ تم النسخ! الصقه الآن في Gmail (Ctrl + V)');
+            }
         }
 
         function copyHtmlEmail() {
@@ -1000,6 +1067,13 @@ Full-Stack Developer
         function closeCodeModal() {
             document.getElementById('code-modal').classList.remove('active');
         }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('code-modal');
+            if (event.target === modal) {
+                closeCodeModal();
+            }
+        };
 
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
