@@ -9,13 +9,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="/assets/logo.png" type="image/png">
+    <link rel="icon" href="assets/logo.png" type="image/png">
 
     <style>
         /* Primary Thmanyah Brand Font */
         @font-face {
             font-family: 'Thmanyah';
-            src: url('https://mostafayasser.online/otf/thmanyahseriftext-Regular.otf') format('opentype'),
+            src: url('otf/thmanyahseriftext-Regular.otf') format('opentype'),
+                 url('./otf/thmanyahseriftext-Regular.otf') format('opentype'),
+                 url('/public/otf/thmanyahseriftext-Regular.otf') format('opentype'),
+                 url('../../public/otf/thmanyahseriftext-Regular.otf') format('opentype'),
                  url('/otf/thmanyahseriftext-Regular.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
@@ -24,7 +27,22 @@
 
         @font-face {
             font-family: 'Thmanyah';
-            src: url('https://mostafayasser.online/otf/thmanyahseriftext-Bold.otf') format('opentype'),
+            src: url('otf/thmanyahseriftext-Medium.otf') format('opentype'),
+                 url('./otf/thmanyahseriftext-Medium.otf') format('opentype'),
+                 url('/public/otf/thmanyahseriftext-Medium.otf') format('opentype'),
+                 url('../../public/otf/thmanyahseriftext-Medium.otf') format('opentype'),
+                 url('/otf/thmanyahseriftext-Medium.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Thmanyah';
+            src: url('otf/thmanyahseriftext-Bold.otf') format('opentype'),
+                 url('./otf/thmanyahseriftext-Bold.otf') format('opentype'),
+                 url('/public/otf/thmanyahseriftext-Bold.otf') format('opentype'),
+                 url('../../public/otf/thmanyahseriftext-Bold.otf') format('opentype'),
                  url('/otf/thmanyahseriftext-Bold.otf') format('opentype');
             font-weight: bold;
             font-style: normal;
@@ -32,8 +50,23 @@
         }
 
         @font-face {
+            font-family: 'Thmanyah';
+            src: url('otf/thmanyahseriftext-Black.otf') format('opentype'),
+                 url('./otf/thmanyahseriftext-Black.otf') format('opentype'),
+                 url('/public/otf/thmanyahseriftext-Black.otf') format('opentype'),
+                 url('../../public/otf/thmanyahseriftext-Black.otf') format('opentype'),
+                 url('/otf/thmanyahseriftext-Black.otf') format('opentype');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
             font-family: 'thmanyah serif text';
-            src: url('https://mostafayasser.online/otf/thmanyahseriftext-Regular.otf') format('opentype'),
+            src: url('otf/thmanyahseriftext-Regular.otf') format('opentype'),
+                 url('./otf/thmanyahseriftext-Regular.otf') format('opentype'),
+                 url('/public/otf/thmanyahseriftext-Regular.otf') format('opentype'),
+                 url('../../public/otf/thmanyahseriftext-Regular.otf') format('opentype'),
                  url('/otf/thmanyahseriftext-Regular.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
@@ -42,7 +75,10 @@
 
         @font-face {
             font-family: 'thmanyah serif text';
-            src: url('https://mostafayasser.online/otf/thmanyahseriftext-Bold.otf') format('opentype'),
+            src: url('otf/thmanyahseriftext-Bold.otf') format('opentype'),
+                 url('./otf/thmanyahseriftext-Bold.otf') format('opentype'),
+                 url('/public/otf/thmanyahseriftext-Bold.otf') format('opentype'),
+                 url('../../public/otf/thmanyahseriftext-Bold.otf') format('opentype'),
                  url('/otf/thmanyahseriftext-Bold.otf') format('opentype');
             font-weight: bold;
             font-style: normal;
@@ -437,7 +473,7 @@
     <!-- Header -->
     <header class="app-header">
         <a href="https://mostafayasser.online" class="brand-badge" target="_blank">
-            <img src="/assets/logo.png" alt="جذع">
+            <img src="assets/logo.png" alt="جذع">
             <div>
                 <div class="brand-title">جذع <span>.</span></div>
                 <div class="brand-sub">منصة قوالب البريد الإلكتروني الاحترافية</div>
@@ -552,9 +588,6 @@
     </div>
 
     <script>
-        // Templates Database with explicit Thmanyah font declaration on EVERY element
-        const FONT_FAMILY_STYLE = "font-family: 'Thmanyah', 'thmanyah serif text', 'Thmanyah Serif Text', 'Amiri', 'Traditional Arabic', serif !important;";
-
         const TEMPLATES = {
             client_reply: {
                 title: "رد بخصوص طلب عمل ومشروع جديد",
@@ -595,7 +628,7 @@ https://mostafayasser.online`,
                             <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td style="vertical-align: middle; padding-left: 14px;">
-                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                        <img src="assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px; font-family: 'Thmanyah', 'thmanyah serif text', serif !important;">جذع <span style="color: #E9EDC9;">.</span></div>
@@ -699,7 +732,7 @@ https://mostafayasser.online`,
                             <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td style="vertical-align: middle; padding-left: 14px;">
-                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                        <img src="assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px; font-family: 'Thmanyah', 'thmanyah serif text', serif !important;">جذع <span style="color: #E9EDC9;">.</span></div>
@@ -796,7 +829,7 @@ Full-Stack Developer
                             <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td style="vertical-align: middle; padding-left: 14px;">
-                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                        <img src="assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px; font-family: 'Thmanyah', 'thmanyah serif text', serif !important;">جذع <span style="color: #E9EDC9;">.</span></div>
@@ -890,7 +923,7 @@ Full-Stack Developer
                             <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td style="vertical-align: middle; padding-left: 14px;">
-                                        <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                        <img src="assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px; font-family: 'Thmanyah', 'thmanyah serif text', serif !important;">جذع <span style="color: #E9EDC9;">.</span></div>
