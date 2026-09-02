@@ -12,3 +12,13 @@ a {
 html {
   scroll-behavior: smooth;
 }
+
+/* Guarantee primary font across all inputs, textareas, and buttons */
+input,
+textarea,
+select,
+button,
+label,
+::placeholder {
+  font-family: 'Thmanyah', serif !important;
+}
