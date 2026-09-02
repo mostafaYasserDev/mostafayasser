@@ -199,14 +199,16 @@ export default function WriteReviewPage() {
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: '25px' }}>
-          <Link
-            href="/"
-            style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}
-          >
-            ← العودة للرئيسية
-          </Link>
-        </div>
+        {!isSubmitted && (
+          <div style={{ textAlign: 'center', marginTop: '25px' }}>
+            <Link
+              href="/"
+              style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}
+            >
+              ← العودة للرئيسية
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

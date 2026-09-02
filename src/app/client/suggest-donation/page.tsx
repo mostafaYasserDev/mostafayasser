@@ -172,14 +172,16 @@ export default function SuggestDonationPage() {
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: '25px' }}>
-          <Link
-            href="/donation"
-            style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}
-          >
-            ← العودة لصفحة الدعم
-          </Link>
-        </div>
+        {!isSubmitted && (
+          <div style={{ textAlign: 'center', marginTop: '25px' }}>
+            <Link
+              href="/donation"
+              style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}
+            >
+              ← العودة لصفحة الدعم
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -60,6 +60,7 @@ export default function ContactSection() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -167,15 +168,13 @@ export default function ContactSection() {
       setName('');
       setEmail('');
       setMessage('');
-      setStatus({
-        type: 'success',
-        text: 'تم إرسال رسالتك بنجاح! سأتواصل معك قريباً.',
-      });
+      setIsSubmitted(true);
+      setStatus(null);
     } catch (err) {
       console.error(err);
       setStatus({
         type: 'error',
-        text: 'حدث خطأ أثناء الإرسال. حاول مجدداً.',
+        text: 'حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقاً.',
       });
     } finally {
       setSubmitting(false);
@@ -302,62 +301,101 @@ export default function ContactSection() {
 
         {/* Contact Form */}
         <div className="contact-form">
-          <div
-            id="form-status"
-            className={`form-status ${status ? status.type : ''}`}
-            role="alert"
-            style={{ display: status ? 'block' : 'none' }}
-          >
-            {status?.text}
-          </div>
-
-          <form id="public-contact-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="contact-name">الاسم</label>
-              <input
-                type="text"
-                id="contact-name"
-                placeholder="اسمك الكريم"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+          {isSubmitted ? (
+            <div className="contact-success-card content-in" style={{ textAlign: 'center', padding: '15px 5px' }}>
+              <div style={{ fontSize: '3.6rem', marginBottom: '16px', lineHeight: 1 }}>🌱</div>
+              <h3
+                style={{
+                  fontSize: '1.65rem',
+                  color: 'var(--primary)',
+                  marginBottom: '12px',
+                  fontWeight: 'bold',
+                }}
+              >
+                وصلت رسالتك بنجاح!
+              </h3>
+              <p
+                style={{
+                  color: 'var(--text-muted)',
+                  lineHeight: '1.9',
+                  fontSize: '1.05rem',
+                  marginBottom: '26px',
+                }}
+              >
+                شكراً لتواصلك معي. لقد استلمت رسالتك باهتمام وسأقوم بالرد عليك عبر بريدك الإلكتروني في أقرب وقت بإذن الله.
+              </p>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => {
+                  setIsSubmitted(false);
+                  setStatus(null);
+                }}
+                style={{ padding: '12px 28px', fontSize: '1rem' }}
+              >
+                إرسال رسالة أخرى
+              </button>
             </div>
+          ) : (
+            <>
+              <div
+                id="form-status"
+                className={`form-status ${status ? status.type : ''}`}
+                role="alert"
+                style={{ display: status ? 'block' : 'none' }}
+              >
+                {status?.text}
+              </div>
 
-            <div className="form-group">
-              <label htmlFor="contact-email-input">البريد الإلكتروني</label>
-              <input
-                type="email"
-                id="contact-email-input"
-                placeholder="example@email.com"
-                dir="ltr"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+              <form id="public-contact-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="contact-name">الاسم</label>
+                  <input
+                    type="text"
+                    id="contact-name"
+                    placeholder="اسمك الكريم"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="contact-message">رسالتك</label>
-              <textarea
-                id="contact-message"
-                rows={4}
-                placeholder="اكتب رسالتك هنا..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                required
-              />
-            </div>
+                <div className="form-group">
+                  <label htmlFor="contact-email-input">البريد الإلكتروني</label>
+                  <input
+                    type="email"
+                    id="contact-email-input"
+                    placeholder="example@email.com"
+                    dir="ltr"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
 
-            <button
-              type="submit"
-              className="btn"
-              style={{ width: '100%' }}
-              disabled={submitting}
-            >
-              {submitting ? 'جاري الإرسال...' : 'إرسال الرسالة'}
-            </button>
-          </form>
+                <div className="form-group">
+                  <label htmlFor="contact-message">رسالتك</label>
+                  <textarea
+                    id="contact-message"
+                    rows={4}
+                    placeholder="اكتب رسالتك هنا..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{ width: '100%' }}
+                  disabled={submitting}
+                >
+                  {submitting ? 'جاري الإرسال...' : 'إرسال الرسالة'}
+                </button>
+              </form>
+            </>
+          )}
         </div>
       </section>
 
