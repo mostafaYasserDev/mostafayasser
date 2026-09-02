@@ -1,34 +1,47 @@
 'use strict';
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { db, collection, getDocs, query, limit } from '@/lib/firebase';
+import { getCachedData, setCachedData } from '@/lib/public-cache';
 import SkeletonCards from './SkeletonCards';
 import EmptyState from './EmptyState';
 
 export interface ArticleData {
   id: string;
   title: string;
-  shortDescription: string;
-  coverImage?: string;
   slug?: string;
-  publishDate?: string | number;
-  createdAt?: number;
+  shortDescription?: string;
+  coverImage?: string;
+  publishDate?: string;
+  featured?: boolean;
 }
 
 export default function ArticlesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
-    async function fetchRecentArticles() {
+    // 1. Try cache
+    const cached = getCachedData<ArticleData[]>('latest_articles');
+    if (cached) {
+      setArticles(cached);
+      setLoading(false);
+      hasLoadedRef.current = true;
+    }
+
+    const loadArticles = async () => {
+      if (hasLoadedRef.current) return;
+      hasLoadedRef.current = true;
+
       try {
         setLoading(true);
         setError(false);
-
-        const q = query(collection(db, 'articles'), limit(6));
+        const q = query(collection(db, 'articles'), limit(3));
         const snap = await getDocs(q);
 
         const items: ArticleData[] = [];
@@ -36,28 +49,45 @@ export default function ArticlesSection() {
           items.push({ id: doc.id, ...(doc.data() as Omit<ArticleData, 'id'>) });
         });
 
-        // Sort by publishDate or createdAt descending
+        // Sort by date descending
         items.sort((a, b) => {
-          const timeA = new Date(a.publishDate || a.createdAt || 0).getTime();
-          const timeB = new Date(b.publishDate || b.createdAt || 0).getTime();
-          return timeB - timeA;
+          const dateA = new Date(a.publishDate || 0).getTime();
+          const dateB = new Date(b.publishDate || 0).getTime();
+          return dateB - dateA;
         });
 
-        // Take top 3 for the home page preview
-        setArticles(items.slice(0, 3));
+        setArticles(items);
+        setCachedData('latest_articles', items);
       } catch (err) {
-        console.error('Error fetching articles from Firestore:', err);
+        console.error('Error fetching latest articles:', err);
         setError(true);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    fetchRecentArticles();
+    if (hasLoadedRef.current) return;
+
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window && sectionRef.current) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            observer.disconnect();
+            loadArticles();
+          }
+        },
+        { rootMargin: '300px' }
+      );
+
+      observer.observe(sectionRef.current);
+      return () => observer.disconnect();
+    } else {
+      loadArticles();
+    }
   }, []);
 
   return (
-    <section id="articles" className="articles-section" style={{ marginBottom: '60px' }}>
+    <section ref={sectionRef} id="articles" data-aos="fade-up">
       <div className="section-header">
         <h2 className="section-title">أحدث المقالات</h2>
         <Link href="/articles" className="view-all-link">
@@ -91,6 +121,7 @@ export default function ArticlesSection() {
                       alt={a.title}
                       className="card-img"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 )}

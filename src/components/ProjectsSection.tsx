@@ -1,64 +1,90 @@
 'use strict';
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { db, collection, getDocs, query, where, limit } from '@/lib/firebase';
+import { getCachedData, setCachedData } from '@/lib/public-cache';
 import SkeletonCards from './SkeletonCards';
 import EmptyState from './EmptyState';
 
 export interface ProjectData {
   id: string;
   title: string;
-  shortDescription: string;
-  mainImage?: string;
   slug?: string;
-  createdAt?: number;
+  shortDescription?: string;
+  mainImage?: string;
   featured?: boolean;
+  createdAt?: number;
 }
 
 export default function ProjectsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
-    async function fetchFeaturedProjects() {
+    // 1. Try cache
+    const cached = getCachedData<ProjectData[]>('featured_projects');
+    if (cached) {
+      setProjects(cached);
+      setLoading(false);
+      hasLoadedRef.current = true;
+    }
+
+    const loadProjects = async () => {
+      if (hasLoadedRef.current) return;
+      hasLoadedRef.current = true;
+
       try {
         setLoading(true);
         setError(false);
-        // Try featured first, fallback to all recent
-        let q = query(collection(db, 'projects'), where('featured', '==', true), limit(6));
-        let snap = await getDocs(q);
-
-        if (snap.empty) {
-          q = query(collection(db, 'projects'), limit(6));
-          snap = await getDocs(q);
-        }
+        const q = query(
+          collection(db, 'projects'),
+          where('featured', '==', true),
+          limit(3)
+        );
+        const snap = await getDocs(q);
 
         const items: ProjectData[] = [];
         snap.forEach((doc) => {
           items.push({ id: doc.id, ...(doc.data() as Omit<ProjectData, 'id'>) });
         });
 
-        // Sort by createdAt descending
-        items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-        // Take top 3 for the home page showcase
-        setProjects(items.slice(0, 3));
+        setProjects(items);
+        setCachedData('featured_projects', items);
       } catch (err) {
-        console.error('Error loading projects from Firestore:', err);
+        console.error('Error fetching featured projects:', err);
         setError(true);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    fetchFeaturedProjects();
+    if (hasLoadedRef.current) return;
+
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window && sectionRef.current) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            observer.disconnect();
+            loadProjects();
+          }
+        },
+        { rootMargin: '300px' }
+      );
+
+      observer.observe(sectionRef.current);
+      return () => observer.disconnect();
+    } else {
+      loadProjects();
+    }
   }, []);
 
   return (
-    <section id="projects" className="projects-section" style={{ marginBottom: '60px' }}>
+    <section ref={sectionRef} id="projects" data-aos="fade-up">
       <div className="section-header">
         <h2 className="section-title">أبرز المشاريع</h2>
         <Link href="/projects" className="view-all-link">
@@ -92,6 +118,7 @@ export default function ProjectsSection() {
                       alt={p.title}
                       className="card-img"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 )}

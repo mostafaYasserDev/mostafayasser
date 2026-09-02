@@ -1,9 +1,10 @@
 'use strict';
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { db, doc, onSnapshot, collection, addDoc } from '@/lib/firebase';
+import { db, doc, getDoc, collection, addDoc } from '@/lib/firebase';
+import { getCachedData, setCachedData } from '@/lib/public-cache';
 
 interface ContactInfoData {
   email?: string;
@@ -21,14 +22,6 @@ interface ContactInfoData {
     url: string;
     icon?: string;
     preset?: string;
-    customIcon?: string;
-    visible?: boolean;
-    order?: number;
-  }>;
-  socialLinks?: Array<{
-    preset: string;
-    url: string;
-    label?: string;
     customIcon?: string;
     visible?: boolean;
     order?: number;
@@ -55,10 +48,12 @@ const SOCIAL_PRESETS: Record<string, { label: string; fa: string }> = {
 };
 
 export default function ContactSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [mounted, setMounted] = useState(false);
   const [contactData, setContactData] = useState<ContactInfoData | null>(null);
   const [loadingInfo, setLoadingInfo] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const hasLoadedRef = useRef(false);
 
   // Form State
   const [name, setName] = useState('');
@@ -71,23 +66,51 @@ export default function ContactSection() {
     setMounted(true);
   }, []);
 
-  // Realtime load contact settings from Firestore
+  // Cache-first load contact settings from Firestore
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      doc(db, 'settings', 'contact'),
-      (snap) => {
+    const cached = getCachedData<ContactInfoData>('contact_settings');
+    if (cached) {
+      setContactData(cached);
+      setLoadingInfo(false);
+      hasLoadedRef.current = true;
+    }
+
+    const loadContact = async () => {
+      if (hasLoadedRef.current) return;
+      hasLoadedRef.current = true;
+
+      try {
+        const snap = await getDoc(doc(db, 'settings', 'contact'));
         if (snap.exists()) {
-          setContactData(snap.data() as ContactInfoData);
+          const data = snap.data() as ContactInfoData;
+          setContactData(data);
+          setCachedData('contact_settings', data);
         }
-        setLoadingInfo(false);
-      },
-      (err) => {
+      } catch (err) {
         console.error('Error fetching contact settings:', err);
+      } finally {
         setLoadingInfo(false);
       }
-    );
+    };
 
-    return () => unsubscribe();
+    if (hasLoadedRef.current) return;
+
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window && sectionRef.current) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            observer.disconnect();
+            loadContact();
+          }
+        },
+        { rootMargin: '300px' }
+      );
+
+      observer.observe(sectionRef.current);
+      return () => observer.disconnect();
+    } else {
+      loadContact();
+    }
   }, []);
 
   // Lock body scroll and listen for ESC key when modal is open
@@ -214,7 +237,7 @@ export default function ContactSection() {
 
   return (
     <>
-      <section id="contact" className="contact-section" data-aos="fade-up">
+      <section ref={sectionRef} id="contact" className="contact-section" data-aos="fade-up">
         {/* Contact Info */}
         <div className="contact-info">
           <h2 className="section-title">لنصنع حكاية جديدة</h2>
@@ -387,6 +410,7 @@ export default function ContactSection() {
                           alt=""
                           className="social-modal-custom-icon"
                           loading="lazy"
+                          decoding="async"
                         />
                       ) : (
                         <i className={link.icon} aria-hidden="true" />
