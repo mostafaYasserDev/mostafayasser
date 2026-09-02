@@ -118,7 +118,6 @@ export default function ReviewsSection() {
                 </div>
               </div>
               <p className="review-text">"{r.reviewText}"</p>
-              {r.date && <div className="review-date">{r.date}</div>}
             </div>
           ))}
       </div>
