@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب انضمام لوظيفة Full-Stack Developer - مصطفى ياسر</title>
+    <!-- Google Fonts for Web Preview & Email Clients Fallback -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+
+    <style>
+        /* Portfolio Brand Fonts */
+        @font-face {
+            font-family: 'thmanyah serif text';
+            src: url('otf/thmanyahseriftext-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'thmanyah serif text';
+            src: url('otf/thmanyahseriftext-Medium.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'thmanyah serif text';
+            src: url('otf/thmanyahseriftext-Bold.otf') format('opentype');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'thmanyah serif text';
+            src: url('otf/thmanyahseriftext-Black.otf') format('opentype');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Thmanyah';
+            src: url('otf/thmanyahseriftext-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Thmanyah';
+            src: url('otf/thmanyahseriftext-Bold.otf') format('opentype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        :root {
+            --primary: #8C5A35;
+            --primary-hover: #6c4222;
+            --secondary: #D4A373;
+            --accent: #E9EDC9;
+            --accent-dark: #A3B18A;
+            --background: #FAEDCD;
+            --card-bg: #FEFAE0;
+            --text-main: #3E2723;
+            --text-muted: #6D4C41;
+            --border-color: #D4A373;
+            --white: #FFFFFF;
+            --shadow-sm: 0 4px 12px rgba(62, 39, 35, 0.06);
+            --shadow-md: 0 8px 24px rgba(62, 39, 35, 0.12);
+            --shadow-lg: 0 16px 36px rgba(62, 39, 35, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', 'Amiri', 'Traditional Arabic', serif;
+            font-weight: bold;
+            background-color: #231a15;
+            background-image: radial-gradient(#3a2b22 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #FAEDCD;
+            min-height: 100vh;
+            padding: 24px 16px 60px;
+            direction: rtl;
+        }
+
+        /* Top App Bar */
+        .app-header {
+            max-width: 900px;
+            margin: 0 auto 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(42, 31, 26, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 14px 22px;
+            border-radius: 14px;
+            border: 1px solid rgba(212, 163, 115, 0.3);
+            box-shadow: var(--shadow-md);
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #FAEDCD;
+        }
+
+        .brand-badge img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #FEFAE0;
+            padding: 4px;
+            border: 1px solid #D4A373;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #D4A373;
+            line-height: 1.2;
+        }
+
+        .brand-sub {
+            font-size: 0.82rem;
+            color: #A3B18A;
+        }
+
+        /* Control Panel */
+        .action-bar {
+            max-width: 900px;
+            margin: 0 auto 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 0.92rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-primary-action {
+            background: linear-gradient(135deg, #8C5A35, #6c4222);
+            color: #FEFAE0;
+            border: 1px solid #D4A373;
+            box-shadow: 0 4px 15px rgba(140, 90, 53, 0.4);
+        }
+
+        .btn-primary-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(140, 90, 53, 0.6);
+            background: linear-gradient(135deg, #9E653C, #7D4C27);
+        }
+
+        .btn-secondary-action {
+            background: rgba(254, 250, 224, 0.08);
+            color: #FAEDCD;
+            border: 1px solid rgba(212, 163, 115, 0.35);
+        }
+
+        .btn-secondary-action:hover {
+            background: rgba(254, 250, 224, 0.15);
+            border-color: #D4A373;
+            transform: translateY(-2px);
+        }
+
+        .btn-gmail {
+            background: linear-gradient(135deg, #EA4335, #c5221f);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(234, 67, 53, 0.35);
+        }
+
+        .btn-gmail:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(234, 67, 53, 0.5);
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #ffffff;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #2A1F1A;
+            color: #FEFAE0;
+            padding: 12px 26px;
+            border-radius: 50px;
+            border: 2px solid #8C5A35;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Target Post Brief Banner */
+        .post-brief {
+            max-width: 900px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #2A1F1A, #1d1512);
+            border: 1px dashed #D4A373;
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .post-brief-content {
+            font-size: 0.88rem;
+            color: #FAEDCD;
+            line-height: 1.5;
+        }
+
+        .post-brief-tag {
+            background: #8C5A35;
+            color: #FEFAE0;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.78rem;
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        /* Preview Area Frame */
+        .preview-wrapper {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #FAEDCD;
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+            border: 1px solid #D4A373;
+            color: #3E2723;
+        }
+
+        .preview-header-hint {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(140, 90, 53, 0.2);
+            color: #6D4C41;
+            font-size: 0.82rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #2A1F1A;
+            border: 1px solid #D4A373;
+            border-radius: 14px;
+            max-width: 750px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-head {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(212, 163, 115, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-head h3 {
+            color: #D4A373;
+            font-size: 1.1rem;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #FAEDCD;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 16px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .code-area {
+            width: 100%;
+            height: 350px;
+            background: #150e0b;
+            color: #A3B18A;
+            border: 1px solid #4A3525;
+            border-radius: 8px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.82rem;
+            direction: ltr;
+            text-align: left;
+            resize: none;
+            white-space: pre;
+        }
+
+        .modal-footer {
+            padding: 14px 20px;
+            border-top: 1px solid rgba(212, 163, 115, 0.25);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .app-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .action-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-wrapper {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <a href="https://mostafayasser.online" class="brand-badge" target="_blank">
+            <img src="assets/logo.png" alt="جذع">
+            <div>
+                <div class="brand-title">جذع <span>.</span></div>
+                <div class="brand-sub">مصطفى ياسر | Full-Stack Developer</div>
+            </div>
+        </a>
+        <div style="font-size: 0.85rem; color: #D4A373; font-weight: bold;">
+            <i class="fas fa-envelope-open-text"></i> إيميل التقديم (بخط ثمانية الأصلي)
+        </div>
+    </header>
+
+    <!-- Job Info Brief Banner -->
+    <div class="post-brief">
+        <div class="post-brief-content">
+            <strong>🎯 تفاصيل الإعلان:</strong>
+            <span class="post-brief-tag">مركز د. أبو النصر للعظام والطب الرياضي</span>
+            <span class="post-brief-tag"><i class="fas fa-subway"></i> الدقي</span>
+            <span class="post-brief-tag">Full-Stack Developer</span>
+            <span style="margin-right: 8px; color: #A3B18A; font-size: 0.8rem;">
+                البريد: <strong>dr.aboelnsr@icloud.com</strong>
+            </span>
+        </div>
+    </div>
+
+    <!-- Actions Control Bar -->
+    <div class="action-bar">
+        <button class="btn-action btn-primary-action" id="copy-rich-btn" onclick="copyRichEmail()">
+            <i class="fas fa-copy"></i>
+            <span>نسخ للإيميل (تنسيق لـ Gmail / Outlook)</span>
+        </button>
+
+        <button class="btn-action btn-secondary-action" onclick="openCodeModal()">
+            <i class="fas fa-code"></i>
+            <span>عرض ونسخ كود HTML</span>
+        </button>
+
+        <a class="btn-action btn-gmail" id="gmail-compose-link" href="#" target="_blank" onclick="prepareGmailCompose()">
+            <i class="fas fa-paper-plane"></i>
+            <span>فتح في Gmail</span>
+        </a>
+
+        <a class="btn-action btn-whatsapp" href="https://wa.me/201001239131?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%20%D8%A3%D8%A8%D9%88%20%D8%A7%D9%84%D9%86%D8%B5%D8%B1%D8%8C%20%D8%AA%D9%88%D8%A7%D8%B5%D9%84%D8%AA%20%D9%85%D8%B9%20%D8%AD%D8%B6%D8%B1%D8%AA%D9%83%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%20%D9%88%D8%B8%D9%8A%D9%81%D8%A9%20Full-Stack%20Developer" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            <span>واتساب المركز</span>
+        </a>
+    </div>
+
+    <!-- Email Rendered Container -->
+    <div class="preview-wrapper">
+        <div class="preview-header-hint">
+            <span><i class="fas fa-eye"></i> معاينة شكل الإيميل</span>
+            <span><i class="fas fa-check-circle" style="color: #2e7d32;"></i> خط ثمانية Serif الأصلي</span>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- START OF ACTUAL EMAIL HTML (Copyable & Client-Safe Table)   -->
+        <!-- ============================================================= -->
+        <div id="email-content-box" style="direction: rtl; text-align: right; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', 'Amiri', 'Traditional Arabic', serif; font-weight: bold; line-height: 1.85; color: #3E2723; background-color: #FAEDCD; padding: 14px; border-radius: 14px;">
+            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #FEFAE0; border: 1.5px solid #D4A373; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(62,39,35,0.08); font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', 'Amiri', 'Traditional Arabic', serif; font-weight: bold;">
+                
+                <!-- Email Header Banner -->
+                <tr>
+                    <td style="background: linear-gradient(135deg, #8C5A35 0%, #6c4222 100%); background-color: #8C5A35; padding: 22px 20px; text-align: right; border-bottom: 3px solid #D4A373; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="vertical-align: middle;">
+                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td style="vertical-align: middle; padding-left: 14px;">
+                                                <img src="https://mostafayasser.online/assets/logo.png" alt="شعار جذع" width="46" height="46" style="display: block; border-radius: 10px; background: #FEFAE0; padding: 3px; border: 1px solid #D4A373;">
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <div style="font-size: 24px; font-weight: 900; color: #FEFAE0; letter-spacing: -0.5px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                                                    جذع <span style="color: #E9EDC9;">.</span>
+                                                </div>
+                                                <div style="font-size: 13.5px; color: #FAEDCD; font-weight: bold; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                                                    مصطفى ياسر | Full-Stack Developer
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="text-align: left; vertical-align: middle;">
+                                    <span style="display: inline-block; background-color: #FEFAE0; color: #8C5A35; padding: 5px 14px; border-radius: 16px; font-size: 13px; font-weight: bold; border: 1px solid #D4A373; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                                        💼 طلب توظيف
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Email Body Content -->
+                <tr>
+                    <td style="padding: 26px 22px 20px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', 'Amiri', 'Traditional Arabic', serif; font-weight: bold;">
+                        
+                        <!-- Salutation -->
+                        <div style="font-size: 20px; font-weight: 900; color: #8C5A35; margin-bottom: 14px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                            السلام عليكم دكتور أبو النصر،
+                        </div>
+
+                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
+                            أتمنى أن تكون بخير وفي أتم الصحة والعافية.
+                        </p>
+
+                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
+                            اطلعت على إعلانكم عن وظيفة <strong style="color: #8C5A35;">Full-Stack Developer</strong> بـ <strong style="color: #8C5A35;">مركز الدكتور أبو النصر للعظام والطب الرياضي</strong>، ويسعدني التقدم للوظيفة والانضمام إلى فريق العمل لديكم (من مقر المركز بالدقي).
+                        </p>
+
+                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 14px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
+                            أعمل في تطوير البرمجيات وتطبيقات الويب المتكاملة، ولدي خبرة في بناء الأنظمة الطبية لإدارة العيادات والمراكز:
+                        </p>
+
+                        <!-- Concise Wateen Box -->
+                        <div style="background-color: #FAEDCD; border: 1.5px solid #D4A373; border-radius: 10px; padding: 14px 16px; margin: 14px 0 18px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                            <div style="font-size: 16px; font-weight: 900; color: #8C5A35; margin-bottom: 4px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                                🏥 نظام وتين لإدارة عيادات ومراكز الأسنان:
+                            </div>
+                            <div style="font-size: 15px; color: #3E2723; line-height: 1.7; font-weight: bold; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                                نظام سحابي متكامل قمت بتطويره لإدارة سجلات المرضى والمواعيد والحسابات:
+                                <a href="https://wateensystem.online" target="_blank" style="color: #8C5A35; font-weight: 900; text-decoration: underline; direction: ltr; display: inline-block; margin-right: 4px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">wateensystem.online</a>
+                            </div>
+                        </div>
+
+                        <!-- Links Section -->
+                        <p style="font-size: 17px; line-height: 1.85; color: #3E2723; margin: 0 0 12px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
+                            يمكنكم الاطلاع على نماذج أعمالي ومشاريعي:
+                        </p>
+
+                        <!-- Buttons Table with explicit spacing -->
+                        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 10px 0 20px;">
+                            <tr>
+                                <td align="center">
+                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <!-- Projects Button -->
+                                            <td style="border-radius: 8px; background-color: #8C5A35; text-align: center;">
+                                                <a href="https://mostafayasser.online/projects" target="_blank" style="font-size: 15px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold; color: #FEFAE0; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px; white-space: nowrap;">
+                                                    🌐 معرض المشاريع (Portfolio)
+                                                </a>
+                                            </td>
+
+                                            <!-- Explicit Spacer Column -->
+                                            <td width="20" style="width: 20px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+
+                                            <!-- LinkedIn Button -->
+                                            <td style="border-radius: 8px; background-color: #FAEDCD; border: 1.5px solid #D4A373; text-align: center;">
+                                                <a href="https://www.linkedin.com/in/mostafayasserdev/" target="_blank" style="font-size: 15px; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold; color: #8C5A35; text-decoration: none; padding: 10px 20px; display: block; border-radius: 8px; white-space: nowrap;">
+                                                    💼 حساب LinkedIn
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Resume Attachment Notice -->
+                        <div style="background-color: #FEFAE0; border-right: 4px solid #8C5A35; padding: 10px 14px; margin: 14px 0 16px; font-size: 15.5px; color: #6D4C41; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
+                            📎 <strong>مرفق لحضراتكم السيرة الذاتية (CV) للاطلاع،</strong> ويسعدني الحصول على فرصة لمناقشة خبراتي ومدى ملاءمتي للوظيفة.
+                        </div>
+
+                        <p style="font-size: 16.5px; line-height: 1.85; color: #3E2723; margin: 0 0 22px 0; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
+                            شكرًا لوقتكم، وأتطلع لفرصة التعاون معكم.
+                        </p>
+
+                        <!-- Signature Box -->
+                        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top: 2px dashed #D4A373; padding-top: 16px;">
+                            <tr>
+                                <td style="vertical-align: middle; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                                    <div style="font-size: 15px; color: #6D4C41; margin-bottom: 3px; font-weight: bold;">مع خالص التحية،</div>
+                                    <div style="font-size: 21px; font-weight: 900; color: #8C5A35; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif;">
+                                        مصطفى ياسر
+                                    </div>
+                                    <div style="font-size: 14.5px; font-weight: bold; color: #6D4C41; margin-bottom: 8px;">
+                                        Full-Stack Developer
+                                    </div>
+                                    <div style="font-size: 14.5px; color: #3E2723; line-height: 1.8; font-weight: bold;">
+                                        📧 البريد: <a href="mailto:moustafa0yasser123@gmail.com" style="color: #8C5A35; text-decoration: underline; font-weight: 900;">moustafa0yasser123@gmail.com</a><br>
+                                        📱 الهاتف: <a href="tel:+201092991028" style="color: #8C5A35; text-decoration: none; font-weight: 900; direction: ltr; display: inline-block;">+20 109 299 1028</a><br>
+                                        🌐 الموقع: <a href="https://mostafayasser.online" target="_blank" style="color: #8C5A35; text-decoration: none; font-weight: 900;">mostafayasser.online</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+
+                <!-- Email Footer Note -->
+                <tr>
+                    <td style="background-color: #FAEDCD; padding: 12px 20px; text-align: center; border-top: 1px solid #D4A373; font-size: 12.5px; color: #6D4C41; font-family: 'thmanyah serif text', 'Thmanyah Serif Text', 'Thmanyah', serif; font-weight: bold;">
+                        مركز د. أبو النصر للعظام والطب الرياضي - الدقي
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <!-- ============================================================= -->
+        <!-- END OF ACTUAL EMAIL HTML                                     -->
+        <!-- ============================================================= -->
+
+    </div>
+
+    <!-- Code View Modal -->
+    <div class="modal-overlay" id="code-modal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3><i class="fas fa-code"></i> كود HTML المنسق للإيميل</h3>
+                <button class="modal-close" onclick="closeCodeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: #FAEDCD; font-size: 0.9rem; margin-bottom: 12px;">
+                    يمكنك نسخ هذا الكود واستخدامه في أدوات الإرسال البرمجي (Nodemailer, Python, Mailchimp, أو خاصية Insert HTML في برامج البريد):
+                </p>
+                <textarea id="raw-html-code" class="code-area" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action btn-secondary-action" onclick="closeCodeModal()">إغلاق</button>
+                <button class="btn-action btn-primary-action" onclick="copyRawCode()">
+                    <i class="fas fa-copy"></i> نسخ الكود
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Component -->
+    <div class="toast" id="toast-msg">
+        <i class="fas fa-check-circle" style="color: #A3B18A; font-size: 1.2rem;"></i>
+        <span id="toast-text">تم النسخ بنجاح!</span>
+    </div>
+
+    <script>
+        // Set Gmail Compose Link with Subject and Body
+        const RECIPIENT = "dr.aboelnsr@icloud.com";
+        const SUBJECT = "طلب انضمام لوظيفة Full-Stack Developer - مصطفى ياسر";
+
+        function prepareGmailCompose() {
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(RECIPIENT)}&su=${encodeURIComponent(SUBJECT)}`;
+            document.getElementById('gmail-compose-link').href = gmailUrl;
+        }
+        prepareGmailCompose();
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-msg');
+            const text = document.getElementById('toast-text');
+            text.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Copy Rich Formatted HTML directly for pasting into Gmail/Outlook
+        async function copyRichEmail() {
+            const emailBox = document.getElementById('email-content-box');
+            try {
+                const htmlContent = emailBox.innerHTML;
+                const plainText = emailBox.innerText;
+
+                const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+                const blobText = new Blob([plainText], { type: 'text/plain' });
+
+                if (navigator.clipboard && window.ClipboardItem) {
+                    const data = [new ClipboardItem({
+                        'text/html': blobHtml,
+                        'text/plain': blobText
+                    })];
+                    await navigator.clipboard.write(data);
+                    showToast('✨ تم نسخ الإيميل بخط ثمانية الكامل! الصقه في Gmail (Ctrl + V)');
+                } else {
+                    const range = document.createRange();
+                    range.selectNodeContents(emailBox);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    document.execCommand('copy');
+                    sel.removeAllRanges();
+                    showToast('✨ تم النسخ! الصقه الآن في رسالتك البريدية (Ctrl + V)');
+                }
+            } catch (err) {
+                console.error('Copy rich error:', err);
+                const range = document.createRange();
+                range.selectNodeContents(emailBox);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                document.execCommand('copy');
+                sel.removeAllRanges();
+                showToast('✨ تم النسخ! الصقه الآن في رسالتك البريدية (Ctrl + V)');
+            }
+        }
+
+        function openCodeModal() {
+            const emailBox = document.getElementById('email-content-box');
+            const codeArea = document.getElementById('raw-html-code');
+            codeArea.value = emailBox.innerHTML.trim();
+            document.getElementById('code-modal').classList.add('active');
+        }
+
+        function closeCodeModal() {
+            document.getElementById('code-modal').classList.remove('active');
+        }
+
+        function copyRawCode() {
+            const codeArea = document.getElementById('raw-html-code');
+            codeArea.select();
+            document.execCommand('copy');
+            showToast('✔ تم نسخ كود HTML إلى الحافظة!');
+            closeCodeModal();
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('code-modal');
+            if (event.target === modal) {
+                closeCodeModal();
+            }
+        };
+    </script>
+</body>
+
+</html>

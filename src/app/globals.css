@@ -1,0 +1,14 @@
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import '../styles/style.css';
+@import '../styles/responsive.css';
+
+/* Next.js Image & Link helpers to preserve exact styling */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Ensure smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
