@@ -10,49 +10,129 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+const SITE_URL = 'https://mostafayasser.online';
+
 export const metadata: Metadata = {
-  title: 'جذع - حكاية تنمو | مصطفى ياسر',
-  description:
-    'جذع - بورتفوليو مصطفى ياسر. مطور برمجيات ومصمم تجربة مستخدم. أروي حكايات برمجية بروح فنية ولمسة إبداعية.',
-  authors: [{ name: 'مصطفى ياسر' }],
-  keywords: [
-    'مطور ويب',
-    'تصميم مواقع',
-    'برمجة',
-    'تطوير تطبيقات',
-    'واجهات مستخدم',
-    'مصطفى ياسر',
-    'جذع',
-    'Full-Stack Developer',
-    'portfolio',
-  ],
-  icons: {
-    icon: '/assets/logo.png',
-    apple: '/assets/logo.png',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'مصطفى ياسر (جذع) | مطور برمجيات ومواقع محترف ومعلم برمجة للأطفال واليافعين',
+    template: '%s | مصطفى ياسر (جذع) - Mostafa Yasser',
   },
+  description:
+    'الموقع الرسمي للمطور والمدرب مصطفى ياسر (جذع). متخصص في تطوير مواقع وتطبيقات الويب الحديثة (Next.js, React, TypeScript, Full Stack)، ومتاح للعمل الحر (Freelance) والتوظيف عن بعد، بالإضافة لتقديم دورات تدريبية ممتعة لتعليم البرمجة وتطوير التفكير المنطقي للأطفال والشباب في الوطن العربي وعالمياً.',
+  applicationName: 'جذع - Mostafa Yasser Portfolio',
+  authors: [{ name: 'مصطفى ياسر - Mostafa Yasser', url: SITE_URL }],
+  generator: 'Next.js',
+  keywords: [
+    // توظيف وعمل حر - عربي
+    'مبرمج مواقع',
+    'مطور واجهات ويب',
+    'مطور Next.js',
+    'مطور React محترف',
+    'مبرمج فول ستاك',
+    'توظيف مبرمج محترف',
+    'مبرمج فري لانسر',
+    'مطور برمجيات للعمل الحر',
+    'مبرمج تطبيقات ويب',
+    'تصميم وتطوير مواقع شركات',
+    'برمجة متاجر إلكترونية',
+    'مطور ويب مصري',
+    'مبرمج في السعودية والإمارات والخليج',
+    'استشارات برمجية وتطوير واجهات',
+    
+    // تعليم وتدريب الأطفال والشباب - عربي
+    'معلم برمجة للأطفال',
+    'مدرب برمجة لليافعين والشباب',
+    'كورس برمجة للأطفال أونلاين',
+    'تعليم البرمجة للمبتدئين من الصفر',
+    'دروس برمجة خاصة للأطفال',
+    'تعليم التفكير المنطقي والبرمجة للصغار',
+    'مدرس برمجة خصوصي',
+    'تدريب البرمجة والذكاء الاصطناعي للأطفال',
+    
+    // الهوية والاسم
+    'مصطفى ياسر',
+    'Mostafa Yasser',
+    'جذع',
+    'Jidhe',
+    'حكاية جذع',
+    'Mostafa Yasser Dev',
+    
+    // English Keywords - Global Targeting & Hiring
+    'Freelance Web Developer',
+    'Full Stack Developer for Hire',
+    'Next.js Developer Portfolio',
+    'React Frontend Engineer',
+    'TypeScript Software Engineer',
+    'Remote Developer for Hire',
+    'Hire Dedicated Software Engineer',
+    'Coding Tutor for Kids',
+    'Programming Mentor for Youth',
+    'Online Coding Classes for Children',
+    'Learn to Code for Beginners',
+    'Web Development Specialist',
+    'UI UX Web Engineer'
+  ],
+  creator: 'مصطفى ياسر (Mostafa Yasser)',
+  publisher: 'جذع (Jidhe)',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: '/',
+    languages: {
+      'ar': SITE_URL,
+      'en': `${SITE_URL}/?lang=en`,
+    },
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/assets/logo.png', type: 'image/png' },
+    ],
+    apple: '/assets/logo.png',
+    shortcut: '/favicon.ico',
+  },
+  manifest: '/manifest.json',
   openGraph: {
-    title: 'جذع - حكاية تنمو',
+    title: 'مصطفى ياسر (جذع) | مطور برمجيات ومواقع محترف ومعلم برمجة للأطفال واليافعين',
     description:
-      'جذع - بورتفوليو مصطفى ياسر. مطور برمجيات ومصمم تجربة مستخدم. أروي حكايات برمجية بروح فنية ولمسة إبداعية.',
-    url: 'https://mostafayasser.online/',
-    siteName: 'جذع',
+      'مطور ويب وتطبيقات فول ستاك ومعلم برمجة للأطفال والشباب. متاح للعمل الحر والتوظيف والاستشارات البرمجية في الوطن العربي والعالم.',
+    url: SITE_URL,
+    siteName: 'جذع - حكاية تنمو | مصطفى ياسر',
     locale: 'ar_AR',
+    alternateLocale: ['en_US', 'ar_EG', 'ar_SA', 'ar_AE'],
     type: 'website',
     images: [
       {
-        url: 'https://mostafayasser.online/assets/logo.png',
+        url: `${SITE_URL}/assets/logo.png`,
         width: 512,
         height: 512,
-        alt: 'شعار جذع - بورتفوليو مصطفى ياسر',
+        alt: 'مصطفى ياسر - مطور برمجيات ومعلم برمجة | جذع',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@mostafayasser',
-    title: 'جذع - حكاية تنمو',
-    description: 'جذع - بورتفوليو مصطفى ياسر. مطور برمجيات ومصمم تجربة مستخدم.',
-    images: ['https://mostafayasser.online/assets/logo.png'],
+    creator: '@mostafayasser',
+    title: 'مصطفى ياسر (جذع) | مطور برمجيات ومعلم برمجة للأطفال واليافعين',
+    description:
+      'مطور ويب Full Stack خبير في Next.js & React ومتاح للتوظيف والعمل الحر، ومدرب برمجة لليافعين والأطفال.',
+    images: [`${SITE_URL}/assets/logo.png`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -61,8 +141,98 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLdData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Person',
+        '@id': `${SITE_URL}/#person`,
+        name: 'مصطفى ياسر',
+        alternateName: ['Mostafa Yasser', 'Mostafa Yasser Dev', 'جذع'],
+        jobTitle: ['Full Stack Developer', 'Frontend Engineer', 'Coding Tutor for Kids & Youth', 'مطور برمجيات', 'معلم برمجة'],
+        description: 'مطور برمجيات محترف متخصص في بناء مواقع وتطبيقات الويب الحديثة، ومدرب برمجة وتبسيط علوم الحاسوب للأطفال واليافعين.',
+        url: SITE_URL,
+        image: `${SITE_URL}/assets/logo.png`,
+        sameAs: [
+          'https://github.com/mostafaYasserDev',
+          'https://linkedin.com/in/mostafa-yasser',
+          'https://t.me/mostafayasserdev',
+        ],
+        knowsAbout: [
+          'Web Development',
+          'Next.js',
+          'React.js',
+          'TypeScript',
+          'JavaScript',
+          'Node.js',
+          'Firebase & Firestore',
+          'UI/UX Design',
+          'Computer Science Mentorship',
+          'Coding for Kids and Beginners',
+          'برمجة وتطوير المواقع',
+          'تعليم البرمجة للأطفال',
+        ],
+        offers: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'تطوير وتصميم مواقع وتطبيقات الويب (Web Development & Engineering)',
+              description: 'بناء مواقع وتطبيقات ويب فائقة السرعة والتجاوب تناسب الشركات الناشئة والأنشطة التجارية.',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'تدريب وتعليم البرمجة للأطفال واليافعين (Coding Classes for Kids & Youth)',
+              description: 'جلسات تدريبية تفاعلية ممتعة لتأسيس الأطفال والشباب في البرمجة والتفكير المنطقي.',
+            },
+          },
+        ],
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: 'جذع - مصطفى ياسر',
+        description: 'بورتفوليو ومدونة المطور والمدرب مصطفى ياسر (جذع).',
+        inLanguage: ['ar', 'en'],
+        publisher: {
+          '@id': `${SITE_URL}/#person`,
+        },
+      },
+      {
+        '@type': 'ProfessionalService',
+        '@id': `${SITE_URL}/#service`,
+        name: 'جذع للحلول البرمجية والتدريب - مصطفى ياسر',
+        url: SITE_URL,
+        logo: `${SITE_URL}/assets/logo.png`,
+        image: `${SITE_URL}/assets/logo.png`,
+        description: 'خدمات تطوير الويب، استشارات برمجية، وتدريب النشء على علوم الحاسوب والبرمجة.',
+        provider: {
+          '@id': `${SITE_URL}/#person`,
+        },
+        areaServed: [
+          { '@type': 'Country', name: 'Egypt' },
+          { '@type': 'Country', name: 'Saudi Arabia' },
+          { '@type': 'Country', name: 'United Arab Emirates' },
+          { '@type': 'Country', name: 'Kuwait' },
+          { '@type': 'Country', name: 'Qatar' },
+          { '@type': 'Country', name: 'Worldwide' },
+        ],
+      },
+    ],
+  };
+
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+        />
+      </head>
       <body suppressHydrationWarning>
         <PortfolioLayout>{children}</PortfolioLayout>
       </body>

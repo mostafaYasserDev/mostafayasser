@@ -1,9 +1,7 @@
-'use strict';
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { db, doc, getDoc, collection, query, where, getDocs } from '@/lib/firebase';
 
 interface ServiceData {
@@ -15,77 +13,126 @@ interface ServiceData {
   contentHtml?: string;
 }
 
-export default function ServiceDetailPage() {
-  const params = useParams();
-  const rawId = params?.id ? decodeURIComponent(String(params.id)) : '';
-  const [service, setService] = useState<ServiceData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+const SITE_URL = 'https://mostafayasser.online';
 
-  useEffect(() => {
-    if (!rawId) return;
+async function fetchService(rawId: string): Promise<ServiceData | null> {
+  const decodedId = decodeURIComponent(rawId);
+  try {
+    // 1. Try slug
+    const q = query(collection(db, 'services'), where('slug', '==', decodedId));
+    const slugSnap = await getDocs(q);
 
-    async function loadService() {
-      try {
-        setLoading(true);
-        // 1. Try slug
-        const q = query(collection(db, 'services'), where('slug', '==', rawId));
-        const slugSnap = await getDocs(q);
-
-        if (!slugSnap.empty) {
-          const d = slugSnap.docs[0];
-          setService({ id: d.id, ...(d.data() as Omit<ServiceData, 'id'>) });
-          setLoading(false);
-          return;
-        }
-
-        // 2. Try doc ID
-        const docSnap = await getDoc(doc(db, 'services', rawId));
-        if (docSnap.exists()) {
-          setService({ id: docSnap.id, ...(docSnap.data() as Omit<ServiceData, 'id'>) });
-          setLoading(false);
-          return;
-        }
-
-        setNotFound(true);
-      } catch (err) {
-        console.error('Error fetching service:', err);
-        setNotFound(true);
-      } finally {
-        setLoading(false);
-      }
+    if (!slugSnap.empty) {
+      const d = slugSnap.docs[0];
+      return { id: d.id, ...(d.data() as Omit<ServiceData, 'id'>) };
     }
 
-    loadService();
-  }, [rawId]);
+    // 2. Try doc ID
+    const docSnap = await getDoc(doc(db, 'services', decodedId));
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...(docSnap.data() as Omit<ServiceData, 'id'>) };
+    }
 
-  if (loading) {
-    return (
-      <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh' }}>
-        <div className="skeleton-line" style={{ height: '32px', width: '40%', marginBottom: '20px' }} />
-        <div className="skeleton-line" style={{ height: '200px', width: '100%', marginBottom: '20px' }} />
-        <div className="skeleton-line" style={{ height: '16px', width: '80%', marginBottom: '10px' }} />
-        <div className="skeleton-line" style={{ height: '16px', width: '70%' }} />
-      </div>
-    );
+    return null;
+  } catch (err) {
+    console.error('Error fetching service server-side:', err);
+    return null;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const service = await fetchService(params.id);
+
+  if (!service) {
+    return {
+      title: 'الخدمة غير موجودة | جذع',
+      description: 'عذراً، لم نتمكن من العثور على الخدمة المطلوبة.',
+    };
   }
 
-  if (notFound || !service) {
-    return (
-      <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh', textAlign: 'center' }}>
-        <h2>الخدمة غير موجودة</h2>
-        <p style={{ color: 'var(--text-muted)', margin: '15px 0 25px' }}>
-          عذراً، لم نتمكن من العثور على الخدمة المطلوبة.
-        </p>
-        <Link href="/services" className="btn">
-          العودة للخدمات
-        </Link>
-      </div>
-    );
+  const title = `خدمة ${service.title} - مصطفى ياسر | جذع`;
+  const description =
+    service.description ||
+    `تعرف على تفاصيل ومميزات خدمة ${service.title} المقدمة من المطور مصطفى ياسر (جذع). حلول برمجية احترافية واستشارات تقنية.`;
+  const image = service.mainImage || `${SITE_URL}/assets/logo.png`;
+  const canonicalUrl = `${SITE_URL}/service/${encodeURIComponent(service.slug || service.id)}`;
+
+  return {
+    title,
+    description,
+    authors: [{ name: 'مصطفى ياسر' }],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'جذع - حكاية تنمو | مصطفى ياسر',
+      locale: 'ar_AR',
+      type: 'website',
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+      creator: '@mostafayasser',
+    },
+  };
+}
+
+export default async function ServiceDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const service = await fetchService(params.id);
+
+  if (!service) {
+    notFound();
   }
+
+  const serviceUrl = `${SITE_URL}/service/${encodeURIComponent(service.slug || service.id)}`;
+
+  const serviceJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.description || service.title,
+    image: service.mainImage || `${SITE_URL}/assets/logo.png`,
+    url: serviceUrl,
+    provider: {
+      '@type': 'Person',
+      name: 'مصطفى ياسر',
+      url: SITE_URL,
+    },
+    areaServed: {
+      '@type': 'AdministrativeArea',
+      name: 'Worldwide',
+    },
+    inLanguage: 'ar',
+  };
 
   return (
     <div className="view active" style={{ paddingTop: '20px', minHeight: '60vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
+
       <section className="service-detail content-in">
         <Link href="/services" className="back-link">
           ← العودة للخدمات

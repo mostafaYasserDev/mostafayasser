@@ -1,9 +1,7 @@
-'use strict';
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { db, doc, getDoc, collection, query, where, getDocs } from '@/lib/firebase';
 
 interface ArticleData {
@@ -16,77 +14,139 @@ interface ArticleData {
   shortDescription?: string;
 }
 
-export default function ArticleDetailPage() {
-  const params = useParams();
-  const rawId = params?.id ? decodeURIComponent(String(params.id)) : '';
-  const [article, setArticle] = useState<ArticleData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+const SITE_URL = 'https://mostafayasser.online';
 
-  useEffect(() => {
-    if (!rawId) return;
+async function fetchArticle(rawId: string): Promise<ArticleData | null> {
+  const decodedId = decodeURIComponent(rawId);
+  try {
+    // 1. Try slug
+    const q = query(collection(db, 'articles'), where('slug', '==', decodedId));
+    const slugSnap = await getDocs(q);
 
-    async function loadArticle() {
-      try {
-        setLoading(true);
-        // 1. Try slug
-        const q = query(collection(db, 'articles'), where('slug', '==', rawId));
-        const slugSnap = await getDocs(q);
-
-        if (!slugSnap.empty) {
-          const d = slugSnap.docs[0];
-          setArticle({ id: d.id, ...(d.data() as Omit<ArticleData, 'id'>) });
-          setLoading(false);
-          return;
-        }
-
-        // 2. Try doc ID
-        const docSnap = await getDoc(doc(db, 'articles', rawId));
-        if (docSnap.exists()) {
-          setArticle({ id: docSnap.id, ...(docSnap.data() as Omit<ArticleData, 'id'>) });
-          setLoading(false);
-          return;
-        }
-
-        setNotFound(true);
-      } catch (err) {
-        console.error('Error fetching article:', err);
-        setNotFound(true);
-      } finally {
-        setLoading(false);
-      }
+    if (!slugSnap.empty) {
+      const d = slugSnap.docs[0];
+      return { id: d.id, ...(d.data() as Omit<ArticleData, 'id'>) };
     }
 
-    loadArticle();
-  }, [rawId]);
+    // 2. Try doc ID
+    const docSnap = await getDoc(doc(db, 'articles', decodedId));
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...(docSnap.data() as Omit<ArticleData, 'id'>) };
+    }
 
-  if (loading) {
-    return (
-      <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh' }}>
-        <div className="skeleton-line" style={{ height: '32px', width: '40%', marginBottom: '20px' }} />
-        <div className="skeleton-line" style={{ height: '200px', width: '100%', marginBottom: '20px' }} />
-        <div className="skeleton-line" style={{ height: '16px', width: '80%', marginBottom: '10px' }} />
-        <div className="skeleton-line" style={{ height: '16px', width: '70%' }} />
-      </div>
-    );
+    return null;
+  } catch (err) {
+    console.error('Error fetching article server-side:', err);
+    return null;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const article = await fetchArticle(params.id);
+
+  if (!article) {
+    return {
+      title: 'المقال غير موجود | جذع',
+      description: 'عذراً، لم نتمكن من العثور على المقال المطلوب.',
+    };
   }
 
-  if (notFound || !article) {
-    return (
-      <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh', textAlign: 'center' }}>
-        <h2>المقال غير موجود</h2>
-        <p style={{ color: 'var(--text-muted)', margin: '15px 0 25px' }}>
-          عذراً، لم نتمكن من العثور على المقال المطلوب.
-        </p>
-        <Link href="/articles" className="btn">
-          العودة للمقالات
-        </Link>
-      </div>
-    );
+  const title = article.title;
+  const description =
+    article.shortDescription ||
+    `اقرأ مقال "${article.title}" بقلم مصطفى ياسر على موقع جذع. مقالات وحكايات في تطوير الويب والبرمجة.`;
+  const image = article.coverImage || `${SITE_URL}/assets/logo.png`;
+  const canonicalUrl = `${SITE_URL}/article/${encodeURIComponent(article.slug || article.id)}`;
+
+  return {
+    title,
+    description,
+    authors: [{ name: 'مصطفى ياسر' }],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'جذع - حكاية تنمو | مصطفى ياسر',
+      locale: 'ar_AR',
+      type: 'article',
+      publishedTime: article.publishDate,
+      authors: ['مصطفى ياسر'],
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+      creator: '@mostafayasser',
+    },
+  };
+}
+
+export default async function ArticleDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const article = await fetchArticle(params.id);
+
+  if (!article) {
+    notFound();
   }
+
+  const articleUrl = `${SITE_URL}/article/${encodeURIComponent(article.slug || article.id)}`;
+
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: article.title,
+    description: article.shortDescription || article.title,
+    image: article.coverImage || `${SITE_URL}/assets/logo.png`,
+    datePublished: article.publishDate || new Date().toISOString(),
+    dateModified: article.publishDate || new Date().toISOString(),
+    url: articleUrl,
+    author: {
+      '@type': 'Person',
+      name: 'مصطفى ياسر',
+      url: SITE_URL,
+      sameAs: 'https://github.com/mostafaYasserDev',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'جذع',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/assets/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': articleUrl,
+    },
+    inLanguage: 'ar',
+  };
 
   return (
     <div className="view active" style={{ paddingTop: '20px', minHeight: '60vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+
       <section className="article-detail content-in">
         <Link href="/articles" className="back-link">
           ← العودة للمقالات

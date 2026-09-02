@@ -1,9 +1,7 @@
-'use strict';
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { db, doc, getDoc, collection, query, where, getDocs } from '@/lib/firebase';
 
 interface ProjectData {
@@ -17,77 +15,129 @@ interface ProjectData {
   codeUrl?: string;
 }
 
-export default function ProjectDetailPage() {
-  const params = useParams();
-  const rawId = params?.id ? decodeURIComponent(String(params.id)) : '';
-  const [project, setProject] = useState<ProjectData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+const SITE_URL = 'https://mostafayasser.online';
 
-  useEffect(() => {
-    if (!rawId) return;
+async function fetchProject(rawId: string): Promise<ProjectData | null> {
+  const decodedId = decodeURIComponent(rawId);
+  try {
+    // 1. Try slug
+    const q = query(collection(db, 'projects'), where('slug', '==', decodedId));
+    const slugSnap = await getDocs(q);
 
-    async function loadProject() {
-      try {
-        setLoading(true);
-        // 1. Try slug
-        const q = query(collection(db, 'projects'), where('slug', '==', rawId));
-        const slugSnap = await getDocs(q);
-
-        if (!slugSnap.empty) {
-          const d = slugSnap.docs[0];
-          setProject({ id: d.id, ...(d.data() as Omit<ProjectData, 'id'>) });
-          setLoading(false);
-          return;
-        }
-
-        // 2. Try doc ID
-        const docSnap = await getDoc(doc(db, 'projects', rawId));
-        if (docSnap.exists()) {
-          setProject({ id: docSnap.id, ...(docSnap.data() as Omit<ProjectData, 'id'>) });
-          setLoading(false);
-          return;
-        }
-
-        setNotFound(true);
-      } catch (err) {
-        console.error('Error fetching project:', err);
-        setNotFound(true);
-      } finally {
-        setLoading(false);
-      }
+    if (!slugSnap.empty) {
+      const d = slugSnap.docs[0];
+      return { id: d.id, ...(d.data() as Omit<ProjectData, 'id'>) };
     }
 
-    loadProject();
-  }, [rawId]);
+    // 2. Try doc ID
+    const docSnap = await getDoc(doc(db, 'projects', decodedId));
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...(docSnap.data() as Omit<ProjectData, 'id'>) };
+    }
 
-  if (loading) {
-    return (
-      <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh' }}>
-        <div className="skeleton-line" style={{ height: '32px', width: '40%', marginBottom: '20px' }} />
-        <div className="skeleton-line" style={{ height: '200px', width: '100%', marginBottom: '20px' }} />
-        <div className="skeleton-line" style={{ height: '16px', width: '80%', marginBottom: '10px' }} />
-        <div className="skeleton-line" style={{ height: '16px', width: '70%' }} />
-      </div>
-    );
+    return null;
+  } catch (err) {
+    console.error('Error fetching project server-side:', err);
+    return null;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const project = await fetchProject(params.id);
+
+  if (!project) {
+    return {
+      title: 'المشروع غير موجود | جذع',
+      description: 'عذراً، لم نتمكن من العثور على المشروع المطلوب.',
+    };
   }
 
-  if (notFound || !project) {
-    return (
-      <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh', textAlign: 'center' }}>
-        <h2>المشروع غير موجود</h2>
-        <p style={{ color: 'var(--text-muted)', margin: '15px 0 25px' }}>
-          عذراً، لم نتمكن من العثور على المشروع المطلوب.
-        </p>
-        <Link href="/projects" className="btn">
-          العودة للمشاريع
-        </Link>
-      </div>
-    );
+  const title = `مشروع ${project.title} - أعمال وتطبيقات مصطفى ياسر`;
+  const description =
+    project.shortDescription ||
+    `استكشف تفاصيل وتقنيات مشروع ${project.title} المنفذ بواسطة المطور مصطفى ياسر (جذع). حلول برمجية وتصميم واجهات حديثة.`;
+  const image = project.mainImage || `${SITE_URL}/assets/logo.png`;
+  const canonicalUrl = `${SITE_URL}/project/${encodeURIComponent(project.slug || project.id)}`;
+
+  return {
+    title,
+    description,
+    authors: [{ name: 'مصطفى ياسر' }],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'جذع - حكاية تنمو | مصطفى ياسر',
+      locale: 'ar_AR',
+      type: 'website',
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+      creator: '@mostafayasser',
+    },
+  };
+}
+
+export default async function ProjectDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const project = await fetchProject(params.id);
+
+  if (!project) {
+    notFound();
   }
+
+  const projectUrl = `${SITE_URL}/project/${encodeURIComponent(project.slug || project.id)}`;
+
+  const projectJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: project.title,
+    description: project.shortDescription || project.title,
+    image: project.mainImage || `${SITE_URL}/assets/logo.png`,
+    url: projectUrl,
+    applicationCategory: 'WebApplication',
+    operatingSystem: 'Any modern web browser',
+    author: {
+      '@type': 'Person',
+      name: 'مصطفى ياسر',
+      url: SITE_URL,
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    inLanguage: 'ar',
+  };
 
   return (
     <div className="view active" style={{ paddingTop: '20px', minHeight: '60vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectJsonLd) }}
+      />
+
       <section className="project-detail content-in">
         <Link href="/projects" className="back-link">
           ← العودة للمشاريع

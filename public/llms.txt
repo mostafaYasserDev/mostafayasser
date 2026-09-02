@@ -1,0 +1,41 @@
+# مصطفى ياسر (جذع) | Mostafa Yasser (Jidhe)
+> مطور برمجيات ومواقع محترف (Full Stack & Next.js) ومعلم برمجة للأطفال واليافعين | Professional Software Engineer & Coding Tutor
+
+## نبذة عامة | Overview
+مصطفى ياسر (يعرف بمشروع "جذع") هو مهندس برمجيات متخصص في بناء تطبيقات ومواقع الويب الحديثة فائقة السرعة والتجاوب، وخبير في تقنيات React و Next.js و TypeScript وتطوير الواجهات وتجارب المستخدم (UI/UX).
+يقدم خدمات تطوير الويب للشركات والأنشطة التجارية ورواد الأعمال، ومتاح للعمل الحر (Freelance)، والتوظيف عن بعد (Remote / Full-time)، والاستشارات التقنية.
+كما يختص بتقديم تدريب ودورات برمجية تأسيسية وتفاعلية للأطفال واليافعين والمبتدئين في الوطن العربي وحول العالم.
+
+- **الموقع الرسمي:** https://mostafayasser.online
+- **البريد الإلكتروني:** moustafa0yasser123@gmail.com
+- **جيتهب (GitHub):** https://github.com/mostafaYasserDev
+- **لينكدإن (LinkedIn):** https://linkedin.com/in/mostafa-yasser
+- **تليجرام (Telegram):** https://t.me/mostafayasserdev
+
+---
+
+## مجالات الخبرة والخدمات الرئيسية | Key Services & Competencies
+
+### 1. تطوير وبرمجة مواقع وتطبيقات الويب (Web Development & Engineering)
+- بناء وتصميم مواقع الشركات، المتاجر الإلكترونية، المنصات التعليمية، ولوحات التحكم المتقدمة.
+- تقنيات العمل: Next.js (App Router), React.js, TypeScript, JavaScript (ESNext), Node.js, Firebase (Firestore, Auth, Storage, Rules), Cloudflare, Tailwind / Vanilla Modern CSS.
+- بناء أنظمة سريعة جداً، متوافقة 100% مع معايير محركات البحث (SEO)، وتجربة مستخدم (UI/UX) استثنائية.
+- متاح لـ:
+  - العمل الحر (Freelance Projects)
+  - التوظيف بعقود مؤقتة أو دائمة (Contract / Full-Time / Remote)
+  - مراجعة وتطوير البنية البرمجية (Code Review & Refactoring)
+
+### 2. تدريب وتعليم البرمجة للأطفال والشباب (Coding Mentorship for Kids & Youth)
+- تقديم دروس وجلسات تدريبية خاصة وجماعية عبر الإنترنت لتعليم الأطفال واليافعين البرمجة من الصفر.
+- تدريس مبادئ التفكير المنطقي، حل المشكلات، وتطوير الألعاب والتطبيقات البسيطة بأسلوب قصصي وتفاعلي يواكب أعمارهم.
+- التغطية: مصر، السعودية، الإمارات، قطر، الكويت، وكافة الدول العربية والمغتربين حول العالم.
+
+---
+
+## روابط الموقع الرئيسية | Core Site Links
+- [الصفحة الرئيسية - Home](https://mostafayasser.online/): نبذة عن المطور، أبرز الخدمات، معرض المشاريع، وآراء العملاء.
+- [معرض المشاريع - Projects](https://mostafayasser.online/projects): تصفح مشاريع الويب والتطبيقات المنفذة.
+- [المقالات والتدوينات - Articles](https://mostafayasser.online/articles): مقالات وحكايات تقنية متجددة في البرمجة والتطوير.
+- [الخدمات - Services](https://mostafayasser.online/services): قائمة الخدمات البرمجية والتدريبية.
+- [تواصل معي - Contact](https://mostafayasser.online/contact): بدء مشروع جديد أو حجز استشارة/تدريب.
+- [الدعم والمساهمة - Donation](https://mostafayasser.online/donation): طرق مساندة ودعم مشروع جذع.
