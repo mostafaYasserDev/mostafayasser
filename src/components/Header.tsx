@@ -12,13 +12,12 @@ export default function Header() {
   const navRef = useRef<HTMLElement>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Initialize theme from localStorage on mount
+  // Initialize theme from localStorage on mount (Default is Light Mode unless explicitly set to 'dark')
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+    const isDarkSaved = savedTheme === 'dark';
     
-    if (shouldBeDark) {
+    if (isDarkSaved) {
       document.body.classList.add('dark-mode');
       setIsDark(true);
     } else {

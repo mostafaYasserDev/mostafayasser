@@ -46,6 +46,7 @@
   --danger: #c62828;
 }
 
+html.dark-mode body,
 body.dark-mode {
   --primary: #C58A5C;
   --primary-hover: #D4A373;
