@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { PublicArticle, fetchDocBySlugOrId, robustDecode } from '@/lib/public-fetch';
+import HtmlContentRenderer from '@/components/HtmlContentRenderer';
 
 interface Props {
   initialArticle?: PublicArticle | null;
@@ -123,9 +124,9 @@ export default function ArticleDetailClient({ initialArticle, paramId }: Props) 
           </div>
         )}
 
-        <div
+        <HtmlContentRenderer
+          content={article.content}
           className="detail-content ql-editor-view"
-          dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
         <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px dashed var(--border-color)' }}>

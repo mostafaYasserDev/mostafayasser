@@ -168,6 +168,37 @@ export default function AdminProjectsPage() {
             (CTAButtonBlot as any).className = 'inline-btn';
             Quill.register(CTAButtonBlot, true);
           }
+
+          const BlockEmbed = Quill.import('blots/block/embed') as any;
+          if (BlockEmbed) {
+            class CustomHtmlBlot extends BlockEmbed {
+              static create(value: any) {
+                const node = super.create();
+                try {
+                  node.setAttribute('data-html-src', btoa(unescape(encodeURIComponent(value))));
+                } catch {
+                  node.setAttribute('data-html-src', btoa(value));
+                }
+                node.setAttribute('contenteditable', 'false');
+                node.style.cssText =
+                  'display:block; border:2px dashed #8C5A35; border-radius:10px; padding:15px; margin:10px 0; background:rgba(140,90,53,0.05); text-align:center; cursor:default;';
+                node.innerHTML =
+                  '<span style="color:#8C5A35;font-weight:bold;">📄 محتوى HTML مُضمَّن — سيظهر للزوار كصفحة كاملة</span>';
+                return node;
+              }
+              static value(node: HTMLElement) {
+                try {
+                  return decodeURIComponent(escape(atob(node.getAttribute('data-html-src') || '')));
+                } catch {
+                  return '';
+                }
+              }
+            }
+            (CustomHtmlBlot as any).blotName = 'custom-html';
+            (CustomHtmlBlot as any).tagName = 'div';
+            (CustomHtmlBlot as any).className = 'custom-html-block';
+            Quill.register(CustomHtmlBlot, true);
+          }
         } catch (e) {
           // blot might already be registered
         }
@@ -277,8 +308,10 @@ export default function AdminProjectsPage() {
     }
 
     if (quillInstance.current) {
-      const idx = quillInstance.current.getLength();
-      quillInstance.current.clipboard.dangerouslyPasteHTML(idx, customHtmlCode.trim());
+      const selection = quillInstance.current.getSelection(true);
+      const idx = selection ? selection.index : quillInstance.current.getLength();
+      quillInstance.current.insertEmbed(idx, 'custom-html', customHtmlCode.trim());
+      quillInstance.current.setSelection(idx + 1);
     }
 
     setShowHtmlModal(false);

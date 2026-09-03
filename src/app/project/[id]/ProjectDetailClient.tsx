@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { PublicProject, fetchDocBySlugOrId, robustDecode } from '@/lib/public-fetch';
+import HtmlContentRenderer from '@/components/HtmlContentRenderer';
 
 interface Props {
   initialProject?: PublicProject | null;
@@ -123,9 +124,9 @@ export default function ProjectDetailClient({ initialProject, paramId }: Props) 
         )}
 
         <div className="detail-content">
-          <div
+          <HtmlContentRenderer
+            content={project.fullDescription}
             className="ql-editor-view"
-            dangerouslySetInnerHTML={{ __html: project.fullDescription }}
           />
 
           {(project.demoLink || project.githubLink) && (

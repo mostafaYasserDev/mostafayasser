@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { PublicService, fetchDocBySlugOrId, robustDecode } from '@/lib/public-fetch';
+import HtmlContentRenderer from '@/components/HtmlContentRenderer';
 
 interface Props {
   initialService?: PublicService | null;
@@ -125,10 +126,9 @@ export default function ServiceDetailClient({ initialService, paramId }: Props) 
           }}
         >
           <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>تفاصيل الخدمة</h2>
-          <div
+          <HtmlContentRenderer
+            content={service.description}
             className="ql-editor-view"
-            style={{ fontSize: '1.15rem', lineHeight: 2, margin: '20px 0' }}
-            dangerouslySetInnerHTML={{ __html: service.description }}
           />
           <div style={{ marginTop: '35px' }}>
             <Link href="/contact" className="btn" style={{ padding: '12px 30px', fontSize: '1.1rem' }}>
