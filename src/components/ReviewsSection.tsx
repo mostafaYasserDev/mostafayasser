@@ -83,13 +83,13 @@ export default function ReviewsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="reviews" className="reviews-section-container" data-aos="fade-up" style={{ marginBottom: '90px' }}>
-      <div className="section-header">
-        <h2 className="section-title">آراء العملاء</h2>
-        <Link href="/client/write-review" className="view-all-link">
-          أضف رأيك <i className="fas fa-plus" />
-        </Link>
-      </div>
+    <section ref={sectionRef} id="reviews" className="reviews-section" data-aos="fade-up" style={{ marginBottom: '80px' }}>
+      <h2 className="section-title" style={{ color: 'var(--text-main)', textAlign: 'center' }}>
+        ماذا قالوا عن جذع؟
+      </h2>
+      <p className="reviews-scroll-hint">
+        <i className="fas fa-hand-pointer" /> اسحب للمزيد من الآراء
+      </p>
 
       <div className="reviews-grid" id="reviews-grid">
         {loading && <SkeletonCards count={3} />}
@@ -108,19 +108,23 @@ export default function ReviewsSection() {
           !error &&
           reviews.map((r) => (
             <div key={r.id} className="review-card content-in">
-              <div className="review-header">
-                <div className="review-avatar">
-                  {r.clientName.charAt(0).toUpperCase()}
-                </div>
-                <div className="review-author-info">
-                  <h4>{r.clientName}</h4>
-                  {r.serviceName && <span className="service-tag">{r.serviceName}</span>}
-                </div>
-              </div>
-              <p className="review-text">"{r.reviewText}"</p>
+              {r.serviceName && (
+                <span className="review-service">{r.serviceName}</span>
+              )}
+              <h4 style={{ fontSize: '1.2rem', marginBottom: '15px', color: 'var(--primary)' }}>
+                {r.clientName}
+              </h4>
+              <p style={{ fontSize: '1.1rem', lineHeight: '1.6', fontStyle: 'italic' }}>
+                "{r.reviewText}"
+              </p>
             </div>
           ))}
       </div>
+
+      <p className="reviews-cta">
+        هل عملنا معاً؟{' '}
+        <Link href="/client/write-review">شاركنا رأيك</Link>
+      </p>
     </section>
   );
 }
