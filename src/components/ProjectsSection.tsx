@@ -87,7 +87,7 @@ export default function ProjectsSection() {
     <section ref={sectionRef} id="projects" data-aos="fade-up">
       <div className="section-header">
         <h2 className="section-title">أبرز المشاريع</h2>
-        <Link href="/projects" className="view-all-link">
+        <Link href="/projects" className="view-all-link" aria-label="عرض كل المشاريع">
           عرض الكل <i className="fas fa-arrow-left" />
         </Link>
       </div>

@@ -90,7 +90,7 @@ export default function ArticlesSection() {
     <section ref={sectionRef} id="articles" data-aos="fade-up">
       <div className="section-header">
         <h2 className="section-title">أحدث المقالات</h2>
-        <Link href="/articles" className="view-all-link">
+        <Link href="/articles" className="view-all-link" aria-label="عرض كل المقالات">
           عرض الكل <i className="fas fa-arrow-left" />
         </Link>
       </div>

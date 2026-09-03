@@ -55,8 +55,32 @@ function escapeHtml(unsafe) {
     .replace(/'/g, '&#039;');
 }
 
+const SECURITY_HEADERS = {
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+};
+
+function withSecurityHeaders(response) {
+  if (!response) return response;
+  if (response.status >= 300 && response.status < 400) {
+    return response;
+  }
+  const newHeaders = new Headers(response.headers);
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+    newHeaders.set(key, value);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: newHeaders,
+  });
+}
+
 function transformSeo(response, tagsToInject) {
-  return new HTMLRewriter()
+  const transformed = new HTMLRewriter()
     .on('title', { element(el) { el.remove(); } })
     .on('link[rel="canonical"]', { element(el) { el.remove(); } })
     .on('#meta-description', { element(el) { el.remove(); } })
@@ -75,6 +99,7 @@ function transformSeo(response, tagsToInject) {
     .on('[name^="twitter:card"]', { element(el) { el.remove(); } })
     .on('head', { element(el) { el.prepend(tagsToInject, { html: true }); } })
     .transform(response);
+  return withSecurityHeaders(transformed);
 }
 
 export async function onRequest(context) {
@@ -275,6 +300,6 @@ export async function onRequest(context) {
   try {
     return transformSeo(response, tagsToInject);
   } catch {
-    return response;
+    return withSecurityHeaders(response);
   }
 }

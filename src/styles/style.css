@@ -729,6 +729,7 @@ body:not(.aos-init) [data-aos] {
   margin-bottom: 10px;
 }
 
+.review-card h3,
 .review-card h4 {
   font-size: 1.2rem;
   margin-bottom: 15px;
@@ -1277,18 +1278,19 @@ body.dark-mode .reviews-section {
 
 .skeleton-img {
   height: 180px;
-  background: linear-gradient(90deg, var(--accent) 25%, var(--card-bg) 50%, var(--accent) 75%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.4s infinite;
+  background-color: var(--accent);
+  border-radius: 12px;
+  opacity: 0.7;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
 
 .skeleton-line {
   height: 16px;
   margin: 15px 20px 10px;
   border-radius: 8px;
-  background: linear-gradient(90deg, var(--accent) 25%, var(--card-bg) 50%, var(--accent) 75%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.4s infinite;
+  background-color: var(--accent);
+  opacity: 0.7;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
 
 .skeleton-line.short {
@@ -1296,14 +1298,13 @@ body.dark-mode .reviews-section {
   margin-bottom: 20px;
 }
 
-@keyframes skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
 @keyframes skeleton-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 
 .content-in {

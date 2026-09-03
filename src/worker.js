@@ -141,6 +141,31 @@ async function handleImageRequest(request) {
   }
 }
 
+const SECURITY_HEADERS = {
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+};
+
+function withSecurityHeaders(response) {
+  if (!response) return response;
+  // If it's a redirect, return as is
+  if (response.status >= 300 && response.status < 400) {
+    return response;
+  }
+  const newHeaders = new Headers(response.headers);
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+    newHeaders.set(key, value);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: newHeaders,
+  });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -151,17 +176,19 @@ export default {
       if (env.ASSETS) {
         const assetRes = await env.ASSETS.fetch(request);
         if (assetRes.status === 200) {
-          return assetRes;
+          return withSecurityHeaders(assetRes);
         }
       }
-      return handleImageRequest(request);
+      const imgRes = await handleImageRequest(request);
+      return withSecurityHeaders(imgRes);
     }
 
     // Default static assets handler
     if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
+      const res = await env.ASSETS.fetch(request);
+      return withSecurityHeaders(res);
     }
 
-    return new Response('Not found', { status: 404 });
+    return withSecurityHeaders(new Response('Not found', { status: 404 }));
   },
 };

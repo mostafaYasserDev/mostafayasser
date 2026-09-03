@@ -133,9 +133,9 @@ export default function ReviewsSection() {
               {r.serviceName && (
                 <span className="review-service">{r.serviceName}</span>
               )}
-              <h4 style={{ fontSize: '1.2rem', marginBottom: '15px', color: 'var(--primary)' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '15px', color: 'var(--primary)' }}>
                 {r.clientName}
-              </h4>
+              </h3>
               <p style={{ fontSize: '1.1rem', lineHeight: '1.6', fontStyle: 'italic' }}>
                 "{r.reviewText}"
               </p>

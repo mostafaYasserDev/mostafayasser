@@ -87,7 +87,7 @@ export default function ServicesSection() {
     <section ref={sectionRef} id="services" data-aos="fade-up">
       <div className="section-header">
         <h2 className="section-title">أبرز الخدمات</h2>
-        <Link href="/services" className="view-all-link">
+        <Link href="/services" className="view-all-link" aria-label="عرض كل الخدمات">
           عرض الكل <i className="fas fa-arrow-left" />
         </Link>
       </div>
