@@ -108,7 +108,7 @@ export default function ProjectsSection() {
         {!loading &&
           !error &&
           projects.map((p) => {
-            const routeId = encodeURIComponent(String(p.slug || p.id));
+            const targetSlug = p.slug || p.id;
             return (
               <div key={p.id} className="card content-in">
                 {p.mainImage && (
@@ -125,7 +125,7 @@ export default function ProjectsSection() {
                 <div className="card-content">
                   <h3 className="card-title">{p.title}</h3>
                   <p className="card-desc">{p.shortDescription}</p>
-                  <Link href={`/project/${routeId}`} className="btn">
+                  <Link href={`/project/${targetSlug}`} className="btn">
                     عرض المشروع
                   </Link>
                 </div>

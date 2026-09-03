@@ -108,7 +108,7 @@ export default function ServicesSection() {
         {!loading &&
           !error &&
           services.map((s) => {
-            const routeId = encodeURIComponent(String(s.slug || s.id));
+            const targetSlug = s.slug || s.id;
             return (
               <div key={s.id} className="card content-in">
                 {s.mainImage && (
@@ -125,7 +125,7 @@ export default function ServicesSection() {
                 <div className="card-content">
                   <h3 className="card-title">{s.title}</h3>
                   <p className="card-desc">{s.description}</p>
-                  <Link href={`/service/${routeId}`} className="btn">
+                  <Link href={`/service/${targetSlug}`} className="btn">
                     تفاصيل الخدمة
                   </Link>
                 </div>

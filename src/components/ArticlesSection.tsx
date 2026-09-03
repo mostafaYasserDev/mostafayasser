@@ -111,7 +111,7 @@ export default function ArticlesSection() {
         {!loading &&
           !error &&
           articles.map((a) => {
-            const routeId = encodeURIComponent(String(a.slug || a.id));
+            const targetSlug = a.slug || a.id;
             return (
               <div key={a.id} className="card content-in">
                 {a.coverImage && (
@@ -128,7 +128,7 @@ export default function ArticlesSection() {
                 <div className="card-content">
                   <h3 className="card-title">{a.title}</h3>
                   <p className="card-desc">{a.shortDescription}</p>
-                  <Link href={`/article/${routeId}`} className="btn">
+                  <Link href={`/article/${targetSlug}`} className="btn">
                     اقرأ المزيد
                   </Link>
                 </div>

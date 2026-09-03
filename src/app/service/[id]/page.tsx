@@ -1,17 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { db, doc, getDoc, collection, query, where, getDocs } from '@/lib/firebase';
-
-interface ServiceData {
-  id: string;
-  title: string;
-  slug?: string;
-  description?: string;
-  mainImage?: string;
-  contentHtml?: string;
-}
+import { db, collection, getDocs } from '@/lib/firebase';
+import { fetchDocBySlugOrId, PublicService, robustDecode } from '@/lib/public-fetch';
+import ServiceDetailClient from './ServiceDetailClient';
 
 const SITE_URL = 'https://mostafayasser.online';
 
@@ -33,48 +24,23 @@ export async function generateStaticParams() {
   }
 }
 
-async function fetchService(rawId: string): Promise<ServiceData | null> {
-  const decodedId = decodeURIComponent(rawId);
-  try {
-    // 1. Try slug
-    const q = query(collection(db, 'services'), where('slug', '==', decodedId));
-    const slugSnap = await getDocs(q);
-
-    if (!slugSnap.empty) {
-      const d = slugSnap.docs[0];
-      return { id: d.id, ...(d.data() as Omit<ServiceData, 'id'>) };
-    }
-
-    // 2. Try doc ID
-    const docSnap = await getDoc(doc(db, 'services', decodedId));
-    if (docSnap.exists()) {
-      return { id: docSnap.id, ...(docSnap.data() as Omit<ServiceData, 'id'>) };
-    }
-
-    return null;
-  } catch (err) {
-    console.error('Error fetching service server-side:', err);
-    return null;
-  }
-}
-
 export async function generateMetadata({
   params,
 }: {
   params: { id: string };
 }): Promise<Metadata> {
-  const service = await fetchService(params.id);
+  const service = await fetchDocBySlugOrId<PublicService>('services', params.id);
 
   if (!service) {
     return {
-      title: 'الخدمة غير موجودة | جذع',
-      description: 'عذراً، لم نتمكن من العثور على الخدمة المطلوبة.',
+      title: 'الخدمة | جذع - مصطفى ياسر',
+      description: 'خدمات برمجية وحلول ويب متقدمة يقدمها المطور مصطفى ياسر.',
     };
   }
 
   const title = `خدمة ${service.title} - مصطفى ياسر | جذع`;
   const description =
-    service.description ||
+    service.description.replace(/<[^>]*>/g, '').slice(0, 160) ||
     `تعرف على تفاصيل ومميزات خدمة ${service.title} المقدمة من المطور مصطفى ياسر (جذع). حلول برمجية احترافية واستشارات تقنية.`;
   const image = service.mainImage || `${SITE_URL}/assets/logo.png`;
   const canonicalUrl = `${SITE_URL}/service/${encodeURIComponent(service.slug || service.id)}`;
@@ -117,72 +83,36 @@ export default async function ServiceDetailPage({
 }: {
   params: { id: string };
 }) {
-  const service = await fetchService(params.id);
+  const service = await fetchDocBySlugOrId<PublicService>('services', params.id);
+  const serviceUrl = service
+    ? `${SITE_URL}/service/${encodeURIComponent(service.slug || service.id)}`
+    : SITE_URL;
 
-  if (!service) {
-    notFound();
-  }
-
-  const serviceUrl = `${SITE_URL}/service/${encodeURIComponent(service.slug || service.id)}`;
-
-  const serviceJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: service.title,
-    description: service.description || service.title,
-    image: service.mainImage || `${SITE_URL}/assets/logo.png`,
-    url: serviceUrl,
-    provider: {
-      '@type': 'Person',
-      name: 'مصطفى ياسر',
-      url: SITE_URL,
-    },
-    areaServed: {
-      '@type': 'AdministrativeArea',
-      name: 'Worldwide',
-    },
-    inLanguage: 'ar',
-  };
+  const serviceJsonLd = service
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: service.title,
+        description: service.description.replace(/<[^>]*>/g, '').slice(0, 250),
+        provider: {
+          '@type': 'Person',
+          name: 'مصطفى ياسر',
+          url: SITE_URL,
+        },
+        url: serviceUrl,
+        image: service.mainImage || `${SITE_URL}/assets/logo.png`,
+      }
+    : null;
 
   return (
-    <div className="view active" style={{ paddingTop: '20px', minHeight: '60vh' }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
-      />
-
-      <section className="service-detail content-in">
-        <Link href="/services" className="back-link">
-          ← العودة للخدمات
-        </Link>
-
-        <h1 id="service-title" style={{ marginTop: '16px', marginBottom: '12px' }}>
-          {service.title}
-        </h1>
-
-        {service.mainImage && (
-          <div id="service-image-container" style={{ marginBottom: '30px' }}>
-            <img
-              src={service.mainImage}
-              alt={service.title}
-              className="content-in"
-              style={{ width: '100%', maxHeight: '480px', objectFit: 'cover', borderRadius: '16px' }}
-            />
-          </div>
-        )}
-
-        <div
-          className="service-body ql-editor-view"
-          style={{ lineHeight: '1.9', fontSize: '1.1rem', marginBottom: '36px' }}
-          dangerouslySetInnerHTML={{ __html: service.contentHtml || service.description || '' }}
+    <>
+      {serviceJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
         />
-
-        <div className="service-cta" style={{ textAlign: 'center', marginTop: '30px' }}>
-          <Link href="/contact" className="btn" style={{ padding: '14px 36px', fontSize: '1.1rem' }}>
-            اطلب الخدمة الآن
-          </Link>
-        </div>
-      </section>
-    </div>
+      )}
+      <ServiceDetailClient initialService={service} paramId={params.id} />
+    </>
   );
 }
