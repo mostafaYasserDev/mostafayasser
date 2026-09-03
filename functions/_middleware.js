@@ -116,22 +116,40 @@ function transformSeo(response, tagsToInject) {
 }
 
 async function serve404(context) {
-  try {
-    const url = new URL(context.request.url);
-    const req404 = new Request(`${url.origin}/404.html`, {
-      headers: context.request.headers,
-    });
-    const res404 = await context.env.ASSETS.fetch(req404);
-    if (res404 && res404.status === 200) {
-      const h = new Headers(res404.headers);
-      h.set('Content-Type', 'text/html; charset=utf-8');
-      return withSecurityHeaders(new Response(res404.body, {
-        status: 404,
-        statusText: 'Not Found',
-        headers: h,
-      }));
-    }
-  } catch {}
+  // Fetch /404/ (with trailing slash) to avoid the 307 redirect caused by /404.html
+  // With not_found_handling: "404-page", context.next() also works for unknown routes,
+  // but for article/project routes we explicitly fetch the branded 404 page.
+  const strategies = [
+    async () => {
+      const url = new URL(context.request.url);
+      if (!context.env || !context.env.ASSETS) return null;
+      const req = new Request(`${url.origin}/404/`, { headers: context.request.headers });
+      const res = await context.env.ASSETS.fetch(req);
+      return (res && res.status === 200) ? res : null;
+    },
+    async () => {
+      // Fallback: try context.next() on the current request — with 404-page mode
+      // Cloudflare will serve 404.html automatically
+      return null; // Not applicable here, already past context.next()
+    },
+  ];
+
+  for (const strategy of strategies) {
+    try {
+      const res = await strategy();
+      if (res) {
+        const h = new Headers(res.headers);
+        h.set('Content-Type', 'text/html; charset=utf-8');
+        return withSecurityHeaders(new Response(res.body, {
+          status: 404,
+          statusText: 'Not Found',
+          headers: h,
+        }));
+      }
+    } catch {}
+  }
+
+  // Hard fallback (should never reach here with 404-page mode)
   return withSecurityHeaders(new Response('404 Not Found', { status: 404 }));
 }
 
@@ -319,11 +337,10 @@ export async function onRequest(context) {
   }
 
   if (!collectionName) {
-    // Unknown route — let Next.js handle it; if 404, serve custom branded page
+    // Unknown route: with not_found_handling: "404-page" in wrangler.jsonc,
+    // context.next() automatically returns out/404.html with HTTP 404 status.
+    // No need to manually call serve404() — just pass it through with security headers.
     const response = await context.next();
-    if (response.status === 404) {
-      return serve404(context);
-    }
     return withSecurityHeaders(response);
   }
 
