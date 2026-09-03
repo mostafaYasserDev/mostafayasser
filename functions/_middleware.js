@@ -115,42 +115,316 @@ function transformSeo(response, tagsToInject) {
   return withSecurityHeaders(transformed);
 }
 
-async function serve404(context) {
-  // Fetch /404/ (with trailing slash) to avoid the 307 redirect caused by /404.html
-  // With not_found_handling: "404-page", context.next() also works for unknown routes,
-  // but for article/project routes we explicitly fetch the branded 404 page.
-  const strategies = [
-    async () => {
-      const url = new URL(context.request.url);
-      if (!context.env || !context.env.ASSETS) return null;
-      const req = new Request(`${url.origin}/404/`, { headers: context.request.headers });
-      const res = await context.env.ASSETS.fetch(req);
-      return (res && res.status === 200) ? res : null;
-    },
-    async () => {
-      // Fallback: try context.next() on the current request — with 404-page mode
-      // Cloudflare will serve 404.html automatically
-      return null; // Not applicable here, already past context.next()
-    },
-  ];
+function build404Html(requestUrl) {
+  const url = new URL(requestUrl);
+  const homeUrl = `${url.origin}/`;
+  const articlesUrl = `${url.origin}/articles/`;
 
-  for (const strategy of strategies) {
+  return `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — الصفحة غير موجودة | جذع</title>
+  <meta name="description" content="الصفحة التي تبحث عنها غير موجودة.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #FAEDCD;
+      --card:     #FEFAE0;
+      --primary:  #8C5A35;
+      --primary2: #C58A5C;
+      --text:     #3E2723;
+      --text2:    #6D4C41;
+      --border:   rgba(140,90,53,0.18);
+      --glow:     rgba(140,90,53,0.25);
+      --particle: rgba(140,90,53,0.12);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:       #1A120E;
+        --card:     #2A1F1A;
+        --primary:  #C58A5C;
+        --primary2: #D4A373;
+        --text:     #FAEDCD;
+        --text2:    #C8A882;
+        --border:   rgba(74,53,37,0.5);
+        --glow:     rgba(197,138,92,0.2);
+        --particle: rgba(197,138,92,0.08);
+      }
+    }
+
+    body {
+      font-family: 'Tajawal', 'Thmanyah', serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
+    }
+
+    /* Animated background particles */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--particle);
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-20px) scale(1); opacity: 0; }
+    }
+
+    /* Decorative ring */
+    .ring-outer {
+      position: relative;
+      z-index: 1;
+      width: 260px;
+      height: 260px;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ring-outer::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      animation: spin 12s linear infinite;
+    }
+    .ring-outer::after {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 1px dashed var(--border);
+      animation: spin 8s linear infinite reverse;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .number-404 {
+      font-size: clamp(5.5rem, 15vw, 9rem);
+      font-weight: 900;
+      line-height: 1;
+      color: var(--primary);
+      text-shadow: 0 0 60px var(--glow), 0 4px 30px var(--glow);
+      animation: pulse404 3s ease-in-out infinite;
+      letter-spacing: -4px;
+    }
+    @keyframes pulse404 {
+      0%, 100% { text-shadow: 0 0 40px var(--glow), 0 4px 20px var(--glow); }
+      50%       { text-shadow: 0 0 80px var(--glow), 0 8px 50px var(--glow); }
+    }
+
+    /* Glass card */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+      backdrop-filter: blur(12px);
+      animation: slideUp 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .icon-tree {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 1.8rem;
+      color: #fff;
+      box-shadow: 0 8px 24px var(--glow);
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+    }
+
+    p {
+      font-size: 1.05rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 12px;
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+      box-shadow: 0 4px 16px var(--glow);
+    }
+    .btn-primary:hover {
+      background: var(--primary2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--glow);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 24px;
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.25s, transform 0.2s, border-color 0.25s;
+    }
+    .btn-secondary:hover {
+      background: var(--border);
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0 1.5rem;
+    }
+
+    .footer-hint {
+      font-size: 0.85rem;
+      color: var(--text2);
+      opacity: 0.75;
+    }
+    .footer-hint a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .footer-hint a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <!-- Animated particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Giant 404 ring -->
+  <div class="ring-outer">
+    <span class="number-404">404</span>
+  </div>
+
+  <!-- Glass card -->
+  <div class="card">
+    <div class="icon-tree">
+      <i class="fas fa-tree"></i>
+    </div>
+    <h1>هذه الصفحة لم تنبت بعد!</h1>
+    <p>الصفحة التي تبحث عنها غير موجودة، ربما تم نقلها أو حذفها أو أن الرابط غير صحيح.</p>
+
+    <div class="actions">
+      <a href="${homeUrl}" class="btn-primary">
+        <i class="fas fa-home"></i>
+        العودة للرئيسية
+      </a>
+      <a href="${articlesUrl}" class="btn-secondary">
+        <i class="fas fa-newspaper"></i>
+        تصفح المقالات
+      </a>
+    </div>
+
+    <div class="divider"></div>
+    <p class="footer-hint">
+      إذا كنت تعتقد أن هذا خطأ،
+      <a href="mailto:contact@mostafayasser.online">تواصل معنا</a>
+    </p>
+  </div>
+
+  <script>
+    // Dark mode sync: check localStorage for existing theme preference
     try {
-      const res = await strategy();
-      if (res) {
-        const h = new Headers(res.headers);
-        h.set('Content-Type', 'text/html; charset=utf-8');
-        return withSecurityHeaders(new Response(res.body, {
-          status: 404,
-          statusText: 'Not Found',
-          headers: h,
-        }));
+      const stored = localStorage.getItem('theme');
+      if (stored === 'dark') {
+        document.documentElement.style.cssText = '--bg:#1A120E;--card:#2A1F1A;--primary:#C58A5C;--primary2:#D4A373;--text:#FAEDCD;--text2:#C8A882;--border:rgba(74,53,37,0.5);--glow:rgba(197,138,92,0.2);--particle:rgba(197,138,92,0.08);';
+      } else if (stored === 'light') {
+        document.documentElement.style.cssText = '--bg:#FAEDCD;--card:#FEFAE0;--primary:#8C5A35;--primary2:#C58A5C;--text:#3E2723;--text2:#6D4C41;--border:rgba(140,90,53,0.18);--glow:rgba(140,90,53,0.25);--particle:rgba(140,90,53,0.12);';
       }
     } catch {}
-  }
 
-  // Hard fallback (should never reach here with 404-page mode)
-  return withSecurityHeaders(new Response('404 Not Found', { status: 404 }));
+    // Spawn floating particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 60 + 20;
+      p.style.cssText = [
+        'width:' + size + 'px',
+        'height:' + size + 'px',
+        'left:' + Math.random() * 100 + '%',
+        'animation-duration:' + (Math.random() * 15 + 8) + 's',
+        'animation-delay:' + (Math.random() * 10) + 's',
+      ].join(';');
+      container.appendChild(p);
+    }
+  </script>
+</body>
+</html>`;
+}
+
+function serve404(context) {
+  const html = build404Html(context.request.url);
+  return withSecurityHeaders(new Response(html, {
+    status: 404,
+    statusText: 'Not Found',
+    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+  }));
 }
 
 async function fetchFirestoreDoc(collectionName, idOrSlug) {
@@ -337,10 +611,12 @@ export async function onRequest(context) {
   }
 
   if (!collectionName) {
-    // Unknown route: with not_found_handling: "404-page" in wrangler.jsonc,
-    // context.next() automatically returns out/404.html with HTTP 404 status.
-    // No need to manually call serve404() — just pass it through with security headers.
+    // Unknown route: serve the embedded branded 404 page directly.
+    // This is the most reliable approach — no dependency on ASSETS binding or wrangler settings.
     const response = await context.next();
+    if (response.status !== 200) {
+      return serve404(context);
+    }
     return withSecurityHeaders(response);
   }
 
