@@ -62,6 +62,33 @@ export default function ServiceDetailClient({ initialService, paramId }: Props) 
     };
   }, [activeId, initialService]);
 
+  const [relatedServices, setRelatedServices] = useState<PublicService[]>([]);
+
+  useEffect(() => {
+    async function loadRelated() {
+      try {
+        const { collection, getDocs, limit, query } = await import('@/lib/firebase');
+        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'services'), limit(4)));
+        const items: PublicService[] = [];
+        snap.forEach((d) => {
+          if (d.id !== service?.id && d.data().slug !== service?.slug) {
+            items.push({
+              id: d.id,
+              title: d.data().title || '',
+              slug: d.data().slug || '',
+              mainImage: d.data().mainImage || d.data().coverImage || '',
+              description: d.data().description || '',
+            });
+          }
+        });
+        setRelatedServices(items.slice(0, 3));
+      } catch {}
+    }
+    if (service) {
+      loadRelated();
+    }
+  }, [service]);
+
   if (loading) {
     return (
       <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh' }}>
@@ -93,13 +120,33 @@ export default function ServiceDetailClient({ initialService, paramId }: Props) 
   return (
     <div className="view active" style={{ paddingTop: '20px', minHeight: '60vh' }}>
       <section className="service-detail content-in">
-        <Link href="/services" className="back-link" style={{ marginBottom: '20px', display: 'inline-block' }}>
-          ← العودة للخدمات
-        </Link>
+        {/* Semantic Breadcrumbs Navigation */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            marginBottom: '20px',
+            fontSize: '0.95rem',
+            color: 'var(--text-muted)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Link href="/" style={{ color: 'var(--text-muted)' }}>
+            الرئيسية
+          </Link>
+          <span>/</span>
+          <Link href="/services" style={{ color: 'var(--text-muted)' }}>
+            الخدمات
+          </Link>
+          <span>/</span>
+          <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{service.title}</span>
+        </nav>
 
         <div className="detail-header">
           <span className="trunk-badge">خدمة</span>
-          <h1 id="service-title" style={{ marginTop: '14px', marginBottom: '12px' }}>
+          <h1 id="service-title" style={{ marginTop: '14px', marginBottom: '12px', lineHeight: 1.4 }}>
             {service.title}
           </h1>
         </div>
@@ -108,7 +155,7 @@ export default function ServiceDetailClient({ initialService, paramId }: Props) 
           <div id="service-cover-container" style={{ marginBottom: '30px' }}>
             <img
               src={service.mainImage}
-              alt={service.title}
+              alt={`صورة خدمة ${service.title} - خدمات مصطفى ياسر (جذع)`}
               className="detail-cover"
               loading="lazy"
               decoding="async"
@@ -125,7 +172,7 @@ export default function ServiceDetailClient({ initialService, paramId }: Props) 
             marginTop: '30px',
           }}
         >
-          <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>تفاصيل الخدمة</h2>
+          <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>تفاصيل ومميزات الخدمة</h2>
           <HtmlContentRenderer
             content={service.description}
             className="ql-editor-view"
@@ -137,9 +184,31 @@ export default function ServiceDetailClient({ initialService, paramId }: Props) 
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px dashed var(--border-color)' }}>
+        {/* Related Services Section for Enhanced Internal Linking */}
+        {relatedServices.length > 0 && (
+          <div style={{ marginTop: '60px', paddingTop: '30px', borderTop: '1px solid var(--border-color)' }}>
+            <h3 style={{ marginBottom: '20px', fontSize: '1.4rem', color: 'var(--text-main)' }}>
+              خدمات أخرى مقدمة
+            </h3>
+            <div className="grid" style={{ marginBottom: '30px' }}>
+              {relatedServices.map((rel) => (
+                <div key={rel.id} className="card content-in" style={{ padding: '20px' }}>
+                  <h4 style={{ fontSize: '1.15rem', marginBottom: '10px', color: 'var(--primary)' }}>{rel.title}</h4>
+                  <p className="card-desc" style={{ fontSize: '0.9rem', marginBottom: '15px' }}>
+                    {rel.description.replace(/<[^>]*>/g, '').slice(0, 100)}...
+                  </p>
+                  <Link href={`/service/${rel.slug || rel.id}`} className="btn" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>
+                    تفاصيل الخدمة
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px' }}>
           <Link href="/services" className="btn" style={{ background: 'var(--text-muted)' }}>
-            العودة للخدمات
+            ← العودة لكافة الخدمات
           </Link>
         </div>
       </section>

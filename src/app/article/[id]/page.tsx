@@ -93,32 +93,59 @@ export default async function ArticleDetailPage({
   const articleJsonLd = article
     ? {
         '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        headline: article.title,
-        description: article.shortDescription || article.title,
-        image: article.coverImage || `${SITE_URL}/assets/logo.png`,
-        datePublished: article.publishDate || new Date().toISOString(),
-        dateModified: article.publishDate || new Date().toISOString(),
-        url: articleUrl,
-        author: {
-          '@type': 'Person',
-          name: article.author || 'مصطفى ياسر',
-          url: SITE_URL,
-          sameAs: 'https://github.com/mostafaYasserDev',
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'جذع',
-          logo: {
-            '@type': 'ImageObject',
-            url: `${SITE_URL}/assets/logo.png`,
+        '@graph': [
+          {
+            '@type': 'BlogPosting',
+            headline: article.title,
+            description: article.shortDescription || article.title,
+            image: getPublicImageUrl(article.coverImage, 'articles', article.id),
+            datePublished: article.publishDate || new Date().toISOString(),
+            dateModified: article.publishDate || new Date().toISOString(),
+            url: articleUrl,
+            inLanguage: 'ar',
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': articleUrl,
+            },
+            author: {
+              '@type': 'Person',
+              name: article.author || 'مصطفى ياسر',
+              url: SITE_URL,
+              sameAs: 'https://github.com/mostafaYasserDev',
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'جذع',
+              logo: {
+                '@type': 'ImageObject',
+                url: `${SITE_URL}/assets/logo.png`,
+              },
+            },
           },
-        },
-        mainEntityOfPage: {
-          '@type': 'WebPage',
-          '@id': articleUrl,
-        },
-        inLanguage: 'ar',
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'الرئيسية',
+                item: SITE_URL,
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'المقالات',
+                item: `${SITE_URL}/articles`,
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: article.title,
+                item: articleUrl,
+              },
+            ],
+          },
+        ],
       }
     : null;
 

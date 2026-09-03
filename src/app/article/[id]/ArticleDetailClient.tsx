@@ -63,6 +63,34 @@ export default function ArticleDetailClient({ initialArticle, paramId }: Props) 
     };
   }, [activeId, initialArticle]);
 
+  const [relatedArticles, setRelatedArticles] = useState<PublicArticle[]>([]);
+
+  useEffect(() => {
+    async function loadRelated() {
+      try {
+        const { collection, getDocs, limit, query } = await import('@/lib/firebase');
+        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'articles'), limit(4)));
+        const items: PublicArticle[] = [];
+        snap.forEach((d) => {
+          if (d.id !== article?.id && d.data().slug !== article?.slug) {
+            items.push({
+              id: d.id,
+              title: d.data().title || '',
+              slug: d.data().slug || '',
+              coverImage: d.data().coverImage || '',
+              shortDescription: d.data().shortDescription || '',
+              content: '',
+            });
+          }
+        });
+        setRelatedArticles(items.slice(0, 3));
+      } catch {}
+    }
+    if (article) {
+      loadRelated();
+    }
+  }, [article]);
+
   if (loading) {
     return (
       <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh' }}>
@@ -92,31 +120,66 @@ export default function ArticleDetailClient({ initialArticle, paramId }: Props) 
     );
   }
 
+  // Calculate approximate reading time
+  const plainText = (article.content || '').replace(/<[^>]*>/g, ' ').trim();
+  const wordCount = plainText.split(/\s+/).filter(Boolean).length;
+  const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 180));
+
   return (
     <div className="view active" style={{ paddingTop: '20px', minHeight: '60vh' }}>
       <section className="article-detail content-in">
-        <Link href="/articles" className="back-link" style={{ marginBottom: '20px', display: 'inline-block' }}>
-          ← العودة للمقالات
-        </Link>
+        {/* Semantic Breadcrumbs Navigation */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            marginBottom: '20px',
+            fontSize: '0.95rem',
+            color: 'var(--text-muted)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Link href="/" style={{ color: 'var(--text-muted)' }}>
+            الرئيسية
+          </Link>
+          <span>/</span>
+          <Link href="/articles" style={{ color: 'var(--text-muted)' }}>
+            المقالات
+          </Link>
+          <span>/</span>
+          <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{article.title}</span>
+        </nav>
 
         <div className="detail-header">
           <span className="trunk-badge">مقال</span>
-          <h1 id="article-title" style={{ marginTop: '14px', marginBottom: '12px' }}>
+          <h1 id="article-title" style={{ marginTop: '14px', marginBottom: '12px', lineHeight: 1.4 }}>
             {article.title}
           </h1>
 
-          {article.publishDate && (
-            <div className="detail-meta">
-              <span>نُشر في: {article.publishDate}</span>
-            </div>
-          )}
+          <div
+            className="detail-meta"
+            style={{
+              display: 'flex',
+              gap: '16px',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              fontSize: '0.95rem',
+            }}
+          >
+            {article.publishDate && <span>📅 نُشر في: {article.publishDate}</span>}
+            <span>⏱️ قراءة: {readTimeMinutes} {readTimeMinutes === 1 ? 'دقيقة' : 'دقائق'}</span>
+            <span>✍️ بقلم: {article.author || 'مصطفى ياسر'}</span>
+          </div>
         </div>
 
         {article.coverImage && (
           <div id="article-cover-container" style={{ marginBottom: '30px' }}>
             <img
               src={article.coverImage}
-              alt={article.title}
+              alt={`صورة غلاف مقال ${article.title} - مدونة جذع`}
               className="detail-cover"
               loading="lazy"
               decoding="async"
@@ -129,9 +192,41 @@ export default function ArticleDetailClient({ initialArticle, paramId }: Props) 
           className="detail-content ql-editor-view"
         />
 
-        <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px dashed var(--border-color)' }}>
+        {/* Related Articles Section for Enhanced Internal Linking & Retention */}
+        {relatedArticles.length > 0 && (
+          <div style={{ marginTop: '60px', paddingTop: '30px', borderTop: '1px solid var(--border-color)' }}>
+            <h3 style={{ marginBottom: '20px', fontSize: '1.4rem', color: 'var(--text-main)' }}>
+              مقالات أخرى قد تهمك
+            </h3>
+            <div className="grid" style={{ marginBottom: '30px' }}>
+              {relatedArticles.map((rel) => (
+                <div key={rel.id} className="card content-in" style={{ padding: '20px' }}>
+                  {rel.coverImage && (
+                    <div className="card-img-wrapper" style={{ height: '140px', marginBottom: '15px' }}>
+                      <img
+                        src={rel.coverImage}
+                        alt={`غلاف مقال ${rel.title}`}
+                        className="card-img"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <h4 style={{ fontSize: '1.1rem', marginBottom: '10px', lineHeight: 1.4 }}>{rel.title}</h4>
+                  <p className="card-desc" style={{ fontSize: '0.9rem', marginBottom: '15px' }}>
+                    {rel.shortDescription}
+                  </p>
+                  <Link href={`/article/${rel.slug || rel.id}`} className="btn" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>
+                    اقرأ المقال
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px' }}>
           <Link href="/articles" className="btn" style={{ background: 'var(--text-muted)' }}>
-            العودة للمقالات
+            ← العودة لكافة المقالات
           </Link>
         </div>
       </section>

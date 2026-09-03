@@ -76,7 +76,7 @@ export default function AllServicesPage() {
                     <div className="card-img-wrapper">
                       <img
                         src={s.mainImage}
-                        alt={s.title}
+                        alt={`صورة خدمة ${s.title} - خدمات مصطفى ياسر (جذع)`}
                         className="card-img"
                         loading="lazy"
                       />

@@ -76,7 +76,7 @@ export default function AllProjectsPage() {
                     <div className="card-img-wrapper">
                       <img
                         src={p.mainImage}
-                        alt={p.title}
+                        alt={`صورة مشروع ${p.title} - أعمال مصطفى ياسر (جذع)`}
                         className="card-img"
                         loading="lazy"
                       />

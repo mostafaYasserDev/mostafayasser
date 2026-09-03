@@ -91,18 +91,45 @@ export default async function ProjectDetailPage({
   const projectJsonLd = project
     ? {
         '@context': 'https://schema.org',
-        '@type': 'SoftwareApplication',
-        name: project.title,
-        description: project.shortDescription || project.title,
-        applicationCategory: 'WebApplication',
-        operatingSystem: 'All',
-        url: projectUrl,
-        image: project.mainImage || `${SITE_URL}/assets/logo.png`,
-        author: {
-          '@type': 'Person',
-          name: 'مصطفى ياسر',
-          url: SITE_URL,
-        },
+        '@graph': [
+          {
+            '@type': 'SoftwareApplication',
+            name: project.title,
+            description: project.shortDescription || project.title,
+            applicationCategory: 'WebApplication',
+            operatingSystem: 'All',
+            url: projectUrl,
+            image: getPublicImageUrl(project.mainImage, 'projects', project.id),
+            author: {
+              '@type': 'Person',
+              name: 'مصطفى ياسر',
+              url: SITE_URL,
+            },
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'الرئيسية',
+                item: SITE_URL,
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'المشاريع',
+                item: `${SITE_URL}/projects`,
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: project.title,
+                item: projectUrl,
+              },
+            ],
+          },
+        ],
       }
     : null;
 

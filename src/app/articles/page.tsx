@@ -81,7 +81,7 @@ export default function AllArticlesPage() {
                     <div className="card-img-wrapper">
                       <img
                         src={a.coverImage}
-                        alt={a.title}
+                        alt={`غلاف مقال ${a.title} - مدونة مصطفى ياسر (جذع)`}
                         className="card-img"
                         loading="lazy"
                       />

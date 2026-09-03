@@ -62,6 +62,34 @@ export default function ProjectDetailClient({ initialProject, paramId }: Props) 
     };
   }, [activeId, initialProject]);
 
+  const [relatedProjects, setRelatedProjects] = useState<PublicProject[]>([]);
+
+  useEffect(() => {
+    async function loadRelated() {
+      try {
+        const { collection, getDocs, limit, query } = await import('@/lib/firebase');
+        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'projects'), limit(4)));
+        const items: PublicProject[] = [];
+        snap.forEach((d) => {
+          if (d.id !== project?.id && d.data().slug !== project?.slug) {
+            items.push({
+              id: d.id,
+              title: d.data().title || '',
+              slug: d.data().slug || '',
+              mainImage: d.data().mainImage || d.data().coverImage || '',
+              shortDescription: d.data().shortDescription || '',
+              fullDescription: '',
+            });
+          }
+        });
+        setRelatedProjects(items.slice(0, 3));
+      } catch {}
+    }
+    if (project) {
+      loadRelated();
+    }
+  }, [project]);
+
   if (loading) {
     return (
       <div className="view active" style={{ paddingTop: '40px', minHeight: '60vh' }}>
@@ -94,13 +122,33 @@ export default function ProjectDetailClient({ initialProject, paramId }: Props) 
   return (
     <div className="view active" style={{ paddingTop: '20px', minHeight: '60vh' }}>
       <section className="project-detail content-in">
-        <Link href="/projects" className="back-link" style={{ marginBottom: '20px', display: 'inline-block' }}>
-          ← العودة للمشاريع
-        </Link>
+        {/* Semantic Breadcrumbs Navigation */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            marginBottom: '20px',
+            fontSize: '0.95rem',
+            color: 'var(--text-muted)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Link href="/" style={{ color: 'var(--text-muted)' }}>
+            الرئيسية
+          </Link>
+          <span>/</span>
+          <Link href="/projects" style={{ color: 'var(--text-muted)' }}>
+            المشاريع
+          </Link>
+          <span>/</span>
+          <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{project.title}</span>
+        </nav>
 
         <div className="detail-header">
           <span className="trunk-badge">مشروع جذع</span>
-          <h1 id="project-title" style={{ marginTop: '14px', marginBottom: '12px' }}>
+          <h1 id="project-title" style={{ marginTop: '14px', marginBottom: '12px', lineHeight: 1.4 }}>
             {project.title}
           </h1>
 
@@ -115,7 +163,7 @@ export default function ProjectDetailClient({ initialProject, paramId }: Props) 
           <div id="project-cover-container" style={{ marginBottom: '30px' }}>
             <img
               src={project.mainImage}
-              alt={project.title}
+              alt={`صورة مشروع ${project.title} - أعمال مصطفى ياسر (جذع)`}
               className="detail-cover"
               loading="lazy"
               decoding="async"
@@ -173,9 +221,41 @@ export default function ProjectDetailClient({ initialProject, paramId }: Props) 
           )}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px dashed var(--border-color)' }}>
+        {/* Related Projects Section for Enhanced Internal Linking */}
+        {relatedProjects.length > 0 && (
+          <div style={{ marginTop: '60px', paddingTop: '30px', borderTop: '1px solid var(--border-color)' }}>
+            <h3 style={{ marginBottom: '20px', fontSize: '1.4rem', color: 'var(--text-main)' }}>
+              مشاريع أخرى قد تهمك
+            </h3>
+            <div className="grid" style={{ marginBottom: '30px' }}>
+              {relatedProjects.map((rel) => (
+                <div key={rel.id} className="card content-in" style={{ padding: '20px' }}>
+                  {rel.mainImage && (
+                    <div className="card-img-wrapper" style={{ height: '140px', marginBottom: '15px' }}>
+                      <img
+                        src={rel.mainImage}
+                        alt={`غلاف مشروع ${rel.title}`}
+                        className="card-img"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <h4 style={{ fontSize: '1.1rem', marginBottom: '10px', lineHeight: 1.4 }}>{rel.title}</h4>
+                  <p className="card-desc" style={{ fontSize: '0.9rem', marginBottom: '15px' }}>
+                    {rel.shortDescription}
+                  </p>
+                  <Link href={`/project/${rel.slug || rel.id}`} className="btn" style={{ fontSize: '0.9rem', padding: '8px 16px' }}>
+                    عرض المشروع
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px' }}>
           <Link href="/projects" className="btn" style={{ background: 'var(--text-muted)' }}>
-            العودة للمشاريع
+            ← العودة لكافة المشاريع
           </Link>
         </div>
       </section>

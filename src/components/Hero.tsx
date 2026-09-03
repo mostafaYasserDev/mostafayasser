@@ -29,10 +29,16 @@ export default function Hero() {
     <section id="home" className="hero glass-panel">
       <div className="hero-content">
         <span className="trunk-badge">مرحباً بك في جذع</span>
-        <h1>أروي حكايات برمجية</h1>
+        <h1 className="hero-heading" style={{ height: 'auto', minHeight: '1.4em', margin: '15px 0 20px' }}>
+          <span style={{ display: 'block', fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px', lineHeight: 1.3 }}>
+            مصطفى ياسر — مطور برمجيات ومعلم برمجة
+          </span>
+          <span style={{ display: 'block', fontSize: '1.35rem', color: 'var(--primary)', fontWeight: 500, lineHeight: 1.4 }}>
+            أروي حكايات برمجية تنمو وتزهر كالأشجار
+          </span>
+        </h1>
         <p>
-          تتأصل الأفكار وتنمو كالأشجار. أقدم حلولاً برمجية بروح فنية ولمسة
-          إبداعية تجمع بين أصالة الجذور وجمال الأغصان.
+          تتأصل الأفكار وتنمو كالأشجار. أقدم حلولاً برمجية وتطوير مواقع وتطبيقات ويب حديثة، واستشارات تقنية، مع تقديم تدريب تفاعلي ممتع لتعليم البرمجة والتفكير المنطقي للأطفال واليافعين.
         </p>
         <div
           className="hero-btns"

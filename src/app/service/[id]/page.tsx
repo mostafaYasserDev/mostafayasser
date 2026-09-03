@@ -91,16 +91,43 @@ export default async function ServiceDetailPage({
   const serviceJsonLd = service
     ? {
         '@context': 'https://schema.org',
-        '@type': 'Service',
-        name: service.title,
-        description: service.description.replace(/<[^>]*>/g, '').slice(0, 250),
-        provider: {
-          '@type': 'Person',
-          name: 'مصطفى ياسر',
-          url: SITE_URL,
-        },
-        url: serviceUrl,
-        image: service.mainImage || `${SITE_URL}/assets/logo.png`,
+        '@graph': [
+          {
+            '@type': 'Service',
+            name: service.title,
+            description: service.description.replace(/<[^>]*>/g, '').slice(0, 250),
+            provider: {
+              '@type': 'Person',
+              name: 'مصطفى ياسر',
+              url: SITE_URL,
+            },
+            url: serviceUrl,
+            image: getPublicImageUrl(service.mainImage, 'services', service.id),
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'الرئيسية',
+                item: SITE_URL,
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'الخدمات',
+                item: `${SITE_URL}/services`,
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: service.title,
+                item: serviceUrl,
+              },
+            ],
+          },
+        ],
       }
     : null;
 
