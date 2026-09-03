@@ -297,6 +297,17 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('theme') === 'dark') {
+                  document.body.classList.add('dark-mode');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
         <PortfolioLayout>{children}</PortfolioLayout>
       </body>
     </html>

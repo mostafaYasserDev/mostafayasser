@@ -39,6 +39,8 @@
   --accent-dark: #A3B18A;
   --background: #FAEDCD; /* Warm paper / old parchment */
   --card-bg: #FEFAE0; /* Lighter background for cards */
+  --glass-bg: rgba(254, 250, 224, 0.7);
+  --glass-border: rgba(212, 163, 115, 0.3);
   --text-main: #3E2723; /* Dark brown for text */
   --text-muted: #6D4C41;
   --border-color: #D4A373;
@@ -46,6 +48,7 @@
   --danger: #c62828;
 }
 
+html.dark-mode,
 html.dark-mode body,
 body.dark-mode {
   --primary: #C58A5C;
@@ -55,6 +58,8 @@ body.dark-mode {
   --accent-dark: #2F3A26;
   --background: #1A120E;
   --card-bg: #2A1F1A;
+  --glass-bg: rgba(42, 31, 26, 0.7);
+  --glass-border: rgba(74, 53, 37, 0.5);
   --text-main: #FAEDCD;
   --text-muted: #D4A373;
   --border-color: #4A3525;
@@ -515,9 +520,9 @@ body:not(.aos-init) [data-aos] {
 
 /* Enhancements & Animations */
 .glass-panel {
-  background: rgba(254, 250, 224, 0.7);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 163, 115, 0.3);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   box-shadow: 0 15px 35px rgba(62, 39, 35, 0.05);
 }
@@ -1237,11 +1242,14 @@ body:not(.aos-init) [data-aos] {
 }
 
 /* Dark Mode Specifics */
+html.dark-mode .glass-panel,
 body.dark-mode .glass-panel {
-  background: rgba(42, 31, 26, 0.7);
-  border-color: rgba(74, 53, 37, 0.5);
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
 }
 
+html.dark-mode .contact-form input,
+html.dark-mode .contact-form textarea,
 body.dark-mode .contact-form input,
 body.dark-mode .contact-form textarea {
   background-color: var(--card-bg);
@@ -1249,16 +1257,19 @@ body.dark-mode .contact-form textarea {
   color: var(--text-main);
 }
 
+html.dark-mode .error-state,
 body.dark-mode .error-state {
   background-color: #3a1a1a;
   border-color: #8b3a3a;
   color: #ff8a8a;
 }
 
+html.dark-mode .review-card,
 body.dark-mode .review-card {
   background-color: var(--card-bg);
 }
 
+html.dark-mode .reviews-section,
 body.dark-mode .reviews-section {
   background: linear-gradient(135deg, var(--accent) 0%, var(--card-bg) 100%);
 }
@@ -1412,11 +1423,11 @@ body.dark-mode .reviews-section {
 .inline-btn-dark      { background: #3E2723; color: #FAEDCD !important; border: 2px solid #3E2723; }
 .inline-btn-green     { background: #4CAF50; color: #fff    !important; border: 2px solid #4CAF50; }
 
-body.dark-mode .inline-btn-primary   { background: #C58A5C; border-color: #C58A5C; color: #1A120E !important; }
-body.dark-mode .inline-btn-secondary { background: #4B5A3F; border-color: #4B5A3F; color: #FAEDCD !important; }
-body.dark-mode .inline-btn-gold      { background: #8C5A35; border-color: #8C5A35; color: #FAEDCD !important; }
-body.dark-mode .inline-btn-dark      { background: #FAEDCD; border-color: #FAEDCD; color: #1A120E !important; }
-body.dark-mode .inline-btn-green     { background: #388E3C; border-color: #388E3C; color: #fff    !important; }
+html.dark-mode .inline-btn-primary,   body.dark-mode .inline-btn-primary   { background: #C58A5C; border-color: #C58A5C; color: #1A120E !important; }
+html.dark-mode .inline-btn-secondary, body.dark-mode .inline-btn-secondary { background: #4B5A3F; border-color: #4B5A3F; color: #FAEDCD !important; }
+html.dark-mode .inline-btn-gold,      body.dark-mode .inline-btn-gold      { background: #8C5A35; border-color: #8C5A35; color: #FAEDCD !important; }
+html.dark-mode .inline-btn-dark,      body.dark-mode .inline-btn-dark      { background: #FAEDCD; border-color: #FAEDCD; color: #1A120E !important; }
+html.dark-mode .inline-btn-green,     body.dark-mode .inline-btn-green     { background: #388E3C; border-color: #388E3C; color: #fff    !important; }
 
 /* Custom HTML block wrapper in rich content */
 .custom-html-block { margin: 16px 0; width: 100%; }
