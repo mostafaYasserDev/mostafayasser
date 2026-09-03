@@ -166,9 +166,133 @@ function withSecurityHeaders(response) {
   });
 }
 
+async function handleDynamicDetailPage(request, env, url) {
+  const pathParts = url.pathname.split('/').filter(Boolean);
+  if (pathParts.length < 2) return null;
+  const route = pathParts[0]; // 'article' | 'project' | 'service'
+  const collectionName =
+    route === 'article' ? 'articles' : route === 'project' ? 'projects' : 'services';
+  const idOrSlug = robustDecode(pathParts[1]);
+
+  let docFields = null;
+  try {
+    const queryRes = await fetch(`${FIRESTORE_BASE}:runQuery`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        structuredQuery: {
+          from: [{ collectionId: collectionName }],
+          where: {
+            fieldFilter: {
+              field: { fieldPath: 'slug' },
+              op: 'EQUAL',
+              value: { stringValue: idOrSlug },
+            },
+          },
+          limit: 1,
+        },
+      }),
+    });
+    if (queryRes.ok) {
+      const data = await queryRes.json();
+      if (Array.isArray(data) && data[0]?.document?.fields) {
+        docFields = data[0].document.fields;
+      }
+    }
+    if (!docFields) {
+      const getRes = await fetch(
+        `${FIRESTORE_BASE}/${collectionName}/${encodeURIComponent(idOrSlug)}`
+      );
+      if (getRes.ok) {
+        const data = await getRes.json();
+        if (data.fields) docFields = data.fields;
+      }
+    }
+  } catch (e) {
+    console.error('Dynamic route error:', e);
+  }
+
+  if (!docFields) {
+    return null;
+  }
+
+  // Document exists in Firestore!
+  // Fetch an existing pre-rendered HTML shell for this route type from env.ASSETS
+  const templateRoute =
+    route === 'article'
+      ? '/article/from-idea-to-scalable-product/'
+      : route === 'project'
+      ? '/project/angham-adaptive-portfolio/'
+      : '/service/KdCoJji5fShhaW1Wlxai/';
+
+  const templateReq = new Request(`${url.origin}${templateRoute}`, {
+    headers: request.headers,
+  });
+  const templateRes = await env.ASSETS.fetch(templateReq);
+  if (!templateRes || templateRes.status !== 200) {
+    return null;
+  }
+
+  const title = docFields.title?.stringValue || docFields.name?.stringValue || 'جذع';
+  const description =
+    docFields.shortDescription?.stringValue ||
+    docFields.description?.stringValue ||
+    title;
+  const pageTitle = `${title} | جذع`;
+  const canonicalUrl = `${url.origin}/${route}/${encodeURIComponent(idOrSlug)}/`;
+  const image =
+    docFields.coverImage?.stringValue || docFields.mainImage?.stringValue || '';
+  let finalImage = `${url.origin}/assets/og-banner.jpg`;
+  if (image && image.startsWith('http')) finalImage = image;
+
+  const rewriter = new HTMLRewriter()
+    .on('title', {
+      element(el) {
+        el.setInnerContent(pageTitle);
+      },
+    })
+    .on('meta[name="description"]', {
+      element(el) {
+        el.setAttribute('content', description.slice(0, 160));
+      },
+    })
+    .on('meta[property="og:title"]', {
+      element(el) {
+        el.setAttribute('content', pageTitle);
+      },
+    })
+    .on('meta[property="og:description"]', {
+      element(el) {
+        el.setAttribute('content', description.slice(0, 160));
+      },
+    })
+    .on('meta[property="og:url"]', {
+      element(el) {
+        el.setAttribute('content', canonicalUrl);
+      },
+    })
+    .on('meta[property="og:image"]', {
+      element(el) {
+        el.setAttribute('content', finalImage);
+      },
+    })
+    .on('link[rel="canonical"]', {
+      element(el) {
+        el.setAttribute('href', canonicalUrl);
+      },
+    });
+
+  return rewriter.transform(templateRes);
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    // Auto-redirect missing trailing slash for directory routes
+    if (!url.pathname.includes('.') && !url.pathname.endsWith('/')) {
+      return Response.redirect(`${url.origin}${url.pathname}/${url.search}`, 308);
+    }
 
     // Dynamic image conversion route
     if (url.pathname.startsWith('/img/')) {
@@ -183,9 +307,26 @@ export default {
       return withSecurityHeaders(imgRes);
     }
 
-    // Default static assets handler
+    // Default static assets handler with dynamic fallback
     if (env.ASSETS) {
       const res = await env.ASSETS.fetch(request);
+      if (res.status === 200) {
+        return withSecurityHeaders(res);
+      }
+
+      // If asset returned 404 and it's a detail route (/article/*, /project/*, /service/*)
+      if (
+        res.status === 404 &&
+        (url.pathname.startsWith('/article/') ||
+          url.pathname.startsWith('/project/') ||
+          url.pathname.startsWith('/service/'))
+      ) {
+        const dynamicRes = await handleDynamicDetailPage(request, env, url);
+        if (dynamicRes) {
+          return withSecurityHeaders(dynamicRes);
+        }
+      }
+
       return withSecurityHeaders(res);
     }
 
