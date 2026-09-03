@@ -236,7 +236,7 @@ export default function ContactSection() {
 
   return (
     <>
-      <section ref={sectionRef} id="contact" className="contact-section" data-aos="fade-up">
+      <section ref={sectionRef} id="contact" className="contact-section" data-aos="fade-up" style={{ marginTop: '30px' }}>
         {/* Contact Info */}
         <div className="contact-info">
           <h2 className="section-title">لنصنع حكاية جديدة</h2>

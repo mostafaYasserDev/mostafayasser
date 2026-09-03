@@ -31,14 +31,14 @@ export default function Hero() {
         <span className="trunk-badge">مرحباً بك في جذع</span>
         <h1 className="hero-heading" style={{ height: 'auto', minHeight: '1.4em', margin: '15px 0 20px' }}>
           <span style={{ display: 'block', fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px', lineHeight: 1.3 }}>
-            مصطفى ياسر — مطور برمجيات ومعلم برمجة
+            مصطفى ياسر — مطور برمجيات
           </span>
           <span style={{ display: 'block', fontSize: '1.35rem', color: 'var(--primary)', fontWeight: 500, lineHeight: 1.4 }}>
-            أروي حكايات برمجية تنمو وتزهر كالأشجار
+            أروي حكايات برمجية
           </span>
         </h1>
         <p>
-          تتأصل الأفكار وتنمو كالأشجار. أقدم حلولاً برمجية وتطوير مواقع وتطبيقات ويب حديثة، واستشارات تقنية، مع تقديم تدريب تفاعلي ممتع لتعليم البرمجة والتفكير المنطقي للأطفال واليافعين.
+          تتأصل الأفكار وتنمو كالأشجار. أقدم حلولاً برمجية بروح فنية ولمسة إبداعية تجمع بين أصالة الجذور وجمال الأغصان.
         </p>
         <div
           className="hero-btns"

@@ -69,21 +69,27 @@ export default function ArticleDetailClient({ initialArticle, paramId }: Props) 
     async function loadRelated() {
       try {
         const { collection, getDocs, limit, query } = await import('@/lib/firebase');
-        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'articles'), limit(4)));
+        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'articles'), limit(20)));
         const items: PublicArticle[] = [];
         snap.forEach((d) => {
-          if (d.id !== article?.id && d.data().slug !== article?.slug) {
+          const data = d.data();
+          const docId = d.id;
+          const docSlug = data.slug || '';
+          if (docId !== article?.id && docSlug !== article?.slug && docSlug !== article?.id && docId !== article?.slug) {
             items.push({
-              id: d.id,
-              title: d.data().title || '',
-              slug: d.data().slug || '',
-              coverImage: d.data().coverImage || '',
-              shortDescription: d.data().shortDescription || '',
+              id: docId,
+              title: data.title || '',
+              slug: docSlug || docId,
+              coverImage: data.coverImage || '',
+              shortDescription: data.shortDescription || '',
               content: '',
             });
           }
         });
-        setRelatedArticles(items.slice(0, 3));
+
+        // Smart dynamic shuffle to display varied recommendations
+        const shuffled = items.sort(() => 0.5 - Math.random());
+        setRelatedArticles(shuffled.slice(0, 3));
       } catch {}
     }
     if (article) {

@@ -68,20 +68,26 @@ export default function ServiceDetailClient({ initialService, paramId }: Props) 
     async function loadRelated() {
       try {
         const { collection, getDocs, limit, query } = await import('@/lib/firebase');
-        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'services'), limit(4)));
+        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'services'), limit(20)));
         const items: PublicService[] = [];
         snap.forEach((d) => {
-          if (d.id !== service?.id && d.data().slug !== service?.slug) {
+          const data = d.data();
+          const docId = d.id;
+          const docSlug = data.slug || '';
+          if (docId !== service?.id && docSlug !== service?.slug && docSlug !== service?.id && docId !== service?.slug) {
             items.push({
-              id: d.id,
-              title: d.data().title || '',
-              slug: d.data().slug || '',
-              mainImage: d.data().mainImage || d.data().coverImage || '',
-              description: d.data().description || '',
+              id: docId,
+              title: data.title || '',
+              slug: docSlug || docId,
+              mainImage: data.mainImage || data.coverImage || '',
+              description: data.description || '',
             });
           }
         });
-        setRelatedServices(items.slice(0, 3));
+
+        // Smart dynamic shuffle to display varied recommendations
+        const shuffled = items.sort(() => 0.5 - Math.random());
+        setRelatedServices(shuffled.slice(0, 3));
       } catch {}
     }
     if (service) {

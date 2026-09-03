@@ -68,21 +68,27 @@ export default function ProjectDetailClient({ initialProject, paramId }: Props) 
     async function loadRelated() {
       try {
         const { collection, getDocs, limit, query } = await import('@/lib/firebase');
-        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'projects'), limit(4)));
+        const snap = await getDocs(query(collection((await import('@/lib/firebase')).db, 'projects'), limit(20)));
         const items: PublicProject[] = [];
         snap.forEach((d) => {
-          if (d.id !== project?.id && d.data().slug !== project?.slug) {
+          const data = d.data();
+          const docId = d.id;
+          const docSlug = data.slug || '';
+          if (docId !== project?.id && docSlug !== project?.slug && docSlug !== project?.id && docId !== project?.slug) {
             items.push({
-              id: d.id,
-              title: d.data().title || '',
-              slug: d.data().slug || '',
-              mainImage: d.data().mainImage || d.data().coverImage || '',
-              shortDescription: d.data().shortDescription || '',
+              id: docId,
+              title: data.title || '',
+              slug: docSlug || docId,
+              mainImage: data.mainImage || data.coverImage || '',
+              shortDescription: data.shortDescription || '',
               fullDescription: '',
             });
           }
         });
-        setRelatedProjects(items.slice(0, 3));
+
+        // Smart dynamic shuffle to display varied recommendations
+        const shuffled = items.sort(() => 0.5 - Math.random());
+        setRelatedProjects(shuffled.slice(0, 3));
       } catch {}
     }
     if (project) {

@@ -83,7 +83,7 @@ export default function ReviewsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="reviews" data-aos="fade-up">
+    <section ref={sectionRef} id="reviews" className="reviews-section-container" data-aos="fade-up" style={{ marginBottom: '90px' }}>
       <div className="section-header">
         <h2 className="section-title">آراء العملاء</h2>
         <Link href="/client/write-review" className="view-all-link">
