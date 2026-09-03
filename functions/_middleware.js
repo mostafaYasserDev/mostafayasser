@@ -119,6 +119,9 @@ function build404Html(requestUrl) {
   const url = new URL(requestUrl);
   const homeUrl = `${url.origin}/`;
   const articlesUrl = `${url.origin}/articles/`;
+  const projectsUrl = `${url.origin}/projects/`;
+  const servicesUrl = `${url.origin}/services/`;
+  const contactUrl = `${url.origin}/contact/`;
 
   return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -126,7 +129,7 @@ function build404Html(requestUrl) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 — الصفحة غير موجودة | جذع</title>
-  <meta name="description" content="الصفحة التي تبحث عنها غير موجودة.">
+  <meta name="description" content="الصفحة التي تبحث عنها غير موجودة أو تم نقلها.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -135,284 +138,350 @@ function build404Html(requestUrl) {
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #FAEDCD;
-      --card:     #FEFAE0;
-      --primary:  #8C5A35;
-      --primary2: #C58A5C;
-      --text:     #3E2723;
-      --text2:    #6D4C41;
-      --border:   rgba(140,90,53,0.18);
-      --glow:     rgba(140,90,53,0.25);
-      --particle: rgba(140,90,53,0.12);
+      --bg: #FAEDCD;
+      --card-bg: #FEFAE0;
+      --glass-bg: rgba(254, 250, 224, 0.85);
+      --glass-border: rgba(212, 163, 115, 0.35);
+      --primary: #8C5A35;
+      --primary-hover: #6c4222;
+      --text-main: #3E2723;
+      --text-secondary: #6D4C41;
+      --glow: rgba(140, 90, 53, 0.22);
+      --particle: rgba(140, 90, 53, 0.12);
     }
+
+    html.dark-mode, body.dark-mode {
+      --bg: #1A120E;
+      --card-bg: #2A1F1A;
+      --glass-bg: rgba(42, 31, 26, 0.85);
+      --glass-border: rgba(74, 53, 37, 0.6);
+      --primary: #C58A5C;
+      --primary-hover: #D4A373;
+      --text-main: #FAEDCD;
+      --text-secondary: #D4C3A3;
+      --glow: rgba(197, 138, 92, 0.25);
+      --particle: rgba(197, 138, 92, 0.1);
+    }
+
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg:       #1A120E;
-        --card:     #2A1F1A;
-        --primary:  #C58A5C;
-        --primary2: #D4A373;
-        --text:     #FAEDCD;
-        --text2:    #C8A882;
-        --border:   rgba(74,53,37,0.5);
-        --glow:     rgba(197,138,92,0.2);
-        --particle: rgba(197,138,92,0.08);
+      :root:not(.light-mode) {
+        --bg: #1A120E;
+        --card-bg: #2A1F1A;
+        --glass-bg: rgba(42, 31, 26, 0.85);
+        --glass-border: rgba(74, 53, 37, 0.6);
+        --primary: #C58A5C;
+        --primary-hover: #D4A373;
+        --text-main: #FAEDCD;
+        --text-secondary: #D4C3A3;
+        --glow: rgba(197, 138, 92, 0.25);
+        --particle: rgba(197, 138, 92, 0.1);
       }
     }
 
     body {
-      font-family: 'Tajawal', 'Thmanyah', serif;
+      font-family: 'Tajawal', 'Thmanyah', system-ui, -apple-system, sans-serif;
       background: var(--bg);
-      color: var(--text);
+      color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: hidden;
-      padding: 2rem;
+      overflow-x: hidden;
+      padding: 2rem 1rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* Animated background particles */
-    .particles {
+    /* Ambient background glow */
+    .ambient-glow {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(650px, 90vw);
+      height: min(650px, 90vw);
+      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+      opacity: 0.12;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Floating particles */
+    .particles-layer {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
+      overflow: hidden;
     }
-    .particle {
+    .leaf-particle {
       position: absolute;
-      border-radius: 50%;
+      border-radius: 50% 0 50% 0;
       background: var(--particle);
-      animation: float linear infinite;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) rotate(0deg) scale(0.6); opacity: 0; }
+      15% { opacity: 0.8; }
+      85% { opacity: 0.8; }
+      100% { transform: translateY(-30px) rotate(360deg) scale(1); opacity: 0; }
     }
 
-    @keyframes float {
-      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: 1; }
-      100% { transform: translateY(-20px) scale(1); opacity: 0; }
-    }
-
-    /* Decorative ring */
-    .ring-outer {
+    /* Glass card container */
+    .error-card {
       position: relative;
       z-index: 1;
-      width: 260px;
-      height: 260px;
-      margin-bottom: 2.5rem;
+      max-width: 680px;
+      width: 100%;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 3rem);
+      text-align: center;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
+      animation: slideUpFade 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Animated Seedling Icon */
+    .icon-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 1.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .ring-outer::before {
-      content: '';
+    .orbit-ring {
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      border: 2px solid var(--border);
-      animation: spin 12s linear infinite;
+      border: 2px dashed var(--primary);
+      opacity: 0.3;
+      animation: spinOrbit 22s linear infinite;
     }
-    .ring-outer::after {
-      content: '';
-      position: absolute;
-      inset: 20px;
-      border-radius: 50%;
-      border: 1px dashed var(--border);
-      animation: spin 8s linear infinite reverse;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spinOrbit { to { transform: rotate(360deg); } }
 
-    .number-404 {
-      font-size: clamp(5.5rem, 15vw, 9rem);
-      font-weight: 900;
-      line-height: 1;
-      color: var(--primary);
-      text-shadow: 0 0 60px var(--glow), 0 4px 30px var(--glow);
-      animation: pulse404 3s ease-in-out infinite;
-      letter-spacing: -4px;
-    }
-    @keyframes pulse404 {
-      0%, 100% { text-shadow: 0 0 40px var(--glow), 0 4px 20px var(--glow); }
-      50%       { text-shadow: 0 0 80px var(--glow), 0 8px 50px var(--glow); }
-    }
-
-    /* Glass card */
-    .card {
-      position: relative;
-      z-index: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 3rem 2.5rem;
-      max-width: 520px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
-      backdrop-filter: blur(12px);
-      animation: slideUp 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(40px) scale(0.95); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .icon-tree {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      border-radius: 18px;
+    .icon-badge {
+      width: 84px;
+      height: 84px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1.5rem;
-      font-size: 1.8rem;
       color: #fff;
-      box-shadow: 0 8px 24px var(--glow);
+      font-size: 2.2rem;
+      box-shadow: 0 10px 28px var(--glow);
+    }
+
+    .error-number {
+      font-size: clamp(4.5rem, 12vw, 6.5rem);
+      font-weight: 900;
+      line-height: 1;
+      color: var(--primary);
+      letter-spacing: -2px;
+      margin-bottom: 0.25rem;
+      text-shadow: 0 8px 30px var(--glow);
     }
 
     h1 {
-      font-size: clamp(1.4rem, 4vw, 1.8rem);
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.75rem;
-      line-height: 1.4;
+      font-size: clamp(1.4rem, 4vw, 1.95rem);
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0.5rem 0 1rem;
+      line-height: 1.35;
     }
 
-    p {
-      font-size: 1.05rem;
-      color: var(--text2);
-      line-height: 1.7;
-      margin-bottom: 2rem;
+    p.subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.12rem);
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 520px;
+      margin: 0 auto 2rem;
     }
 
-    .actions {
+    /* Buttons */
+    .buttons-group {
       display: flex;
       gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-bottom: 2.2rem;
     }
-
-    .btn-primary {
+    .btn-main {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       padding: 13px 28px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 14px;
       background: var(--primary);
       color: #fff;
-      border-radius: 12px;
       text-decoration: none;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
-      box-shadow: 0 4px 16px var(--glow);
-    }
-    .btn-primary:hover {
-      background: var(--primary2);
-      transform: translateY(-2px);
       box-shadow: 0 8px 24px var(--glow);
+      transition: all 0.25s ease;
+      border: none;
+      cursor: pointer;
     }
-    .btn-secondary {
+    .btn-main:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px var(--glow);
+    }
+    .btn-outline {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       padding: 13px 24px;
-      background: transparent;
-      color: var(--primary);
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      text-decoration: none;
-      font-family: inherit;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 600;
-      transition: background 0.25s, transform 0.2s, border-color 0.25s;
+      border-radius: 14px;
+      background: transparent;
+      border: 1.5px solid var(--glass-border);
+      color: var(--text-main);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
     }
-    .btn-secondary:hover {
-      background: var(--border);
+    .btn-outline:hover {
+      background: var(--card-bg);
       transform: translateY(-2px);
       border-color: var(--primary);
     }
 
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 2rem 0 1.5rem;
+    /* Section links */
+    .sections-box {
+      border-top: 1px solid var(--glass-border);
+      padding-top: 1.8rem;
     }
-
-    .footer-hint {
-      font-size: 0.85rem;
-      color: var(--text2);
-      opacity: 0.75;
+    .sections-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      opacity: 0.85;
     }
-    .footer-hint a {
-      color: var(--primary);
+    .sections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+    .section-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      font-size: 0.92rem;
+      font-weight: 600;
       text-decoration: none;
+      transition: all 0.2s ease;
     }
-    .footer-hint a:hover { text-decoration: underline; }
+    .section-pill i {
+      color: var(--primary);
+    }
+    .section-pill:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px var(--glow);
+    }
   </style>
 </head>
 <body>
-  <!-- Animated particles -->
-  <div class="particles" id="particles"></div>
+  <div class="ambient-glow"></div>
+  <div class="particles-layer" id="particlesLayer"></div>
 
-  <!-- Giant 404 ring -->
-  <div class="ring-outer">
-    <span class="number-404">404</span>
-  </div>
-
-  <!-- Glass card -->
-  <div class="card">
-    <div class="icon-tree">
-      <i class="fas fa-tree"></i>
+  <main class="error-card">
+    <div class="icon-wrapper">
+      <div class="orbit-ring"></div>
+      <div class="icon-badge">
+        <i class="fas fa-seedling"></i>
+      </div>
     </div>
-    <h1>هذه الصفحة لم تنبت بعد!</h1>
-    <p>الصفحة التي تبحث عنها غير موجودة، ربما تم نقلها أو حذفها أو أن الرابط غير صحيح.</p>
 
-    <div class="actions">
-      <a href="${homeUrl}" class="btn-primary">
+    <div class="error-number">404</div>
+    <h1>يبدو أن هذا الغصن لم ينمُ بعد!</h1>
+    <p class="subtitle">
+      الصفحة التي تبحث عنها غير موجودة، أو ربما تم تغيير مسارها، أو سقطت ورقتها في بستان آخر من حكاية جذع.
+    </p>
+
+    <div class="buttons-group">
+      <a href="${homeUrl}" class="btn-main">
         <i class="fas fa-home"></i>
         العودة للرئيسية
       </a>
-      <a href="${articlesUrl}" class="btn-secondary">
-        <i class="fas fa-newspaper"></i>
-        تصفح المقالات
-      </a>
+      <button type="button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '${homeUrl}'; }" class="btn-outline">
+        <i class="fas fa-arrow-right"></i>
+        الصفحة السابقة
+      </button>
     </div>
 
-    <div class="divider"></div>
-    <p class="footer-hint">
-      إذا كنت تعتقد أن هذا خطأ،
-      <a href="mailto:contact@mostafayasser.online">تواصل معنا</a>
-    </p>
-  </div>
+    <div class="sections-box">
+      <div class="sections-title">أو يمكنك استكشاف أحد أقسام الموقع:</div>
+      <div class="sections-grid">
+        <a href="${articlesUrl}" class="section-pill">
+          <i class="fas fa-newspaper"></i>
+          المقالات
+        </a>
+        <a href="${projectsUrl}" class="section-pill">
+          <i class="fas fa-laptop-code"></i>
+          المشاريع
+        </a>
+        <a href="${servicesUrl}" class="section-pill">
+          <i class="fas fa-layer-group"></i>
+          الخدمات
+        </a>
+        <a href="${contactUrl}" class="section-pill">
+          <i class="fas fa-paper-plane"></i>
+          تواصل معي
+        </a>
+      </div>
+    </div>
+  </main>
 
   <script>
-    // Dark mode sync: check localStorage for existing theme preference
+    // Theme synchronization
     try {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'dark') {
-        document.documentElement.style.cssText = '--bg:#1A120E;--card:#2A1F1A;--primary:#C58A5C;--primary2:#D4A373;--text:#FAEDCD;--text2:#C8A882;--border:rgba(74,53,37,0.5);--glow:rgba(197,138,92,0.2);--particle:rgba(197,138,92,0.08);';
-      } else if (stored === 'light') {
-        document.documentElement.style.cssText = '--bg:#FAEDCD;--card:#FEFAE0;--primary:#8C5A35;--primary2:#C58A5C;--text:#3E2723;--text2:#6D4C41;--border:rgba(140,90,53,0.18);--glow:rgba(140,90,53,0.25);--particle:rgba(140,90,53,0.12);';
+      var savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        document.body.classList.add('dark-mode');
+      } else if (savedTheme === 'light') {
+        document.documentElement.classList.add('light-mode');
+        document.body.classList.add('light-mode');
       }
-    } catch {}
+    } catch (e) {}
 
-    // Spawn floating particles
-    const container = document.getElementById('particles');
-    for (let i = 0; i < 18; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      const size = Math.random() * 60 + 20;
-      p.style.cssText = [
-        'width:' + size + 'px',
-        'height:' + size + 'px',
-        'left:' + Math.random() * 100 + '%',
-        'animation-duration:' + (Math.random() * 15 + 8) + 's',
-        'animation-delay:' + (Math.random() * 10) + 's',
-      ].join(';');
-      container.appendChild(p);
-    }
+    // Generate gentle leaf particles
+    try {
+      var layer = document.getElementById('particlesLayer');
+      for (var i = 0; i < 15; i++) {
+        var p = document.createElement('div');
+        p.className = 'leaf-particle';
+        var w = Math.floor(Math.random() * 26) + 14;
+        var h = Math.floor(w * 1.3);
+        p.style.width = w + 'px';
+        p.style.height = h + 'px';
+        p.style.left = (Math.random() * 96 + 2) + '%';
+        p.style.animationDuration = (Math.random() * 14 + 10) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        layer.appendChild(p);
+      }
+    } catch (e) {}
   </script>
 </body>
 </html>`;
