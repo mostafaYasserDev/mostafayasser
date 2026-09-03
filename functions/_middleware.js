@@ -31,6 +31,20 @@ const LISTING_SEO = {
   },
 };
 
+function robustDecode(str) {
+  let cur = str || '';
+  for (let i = 0; i < 3; i++) {
+    try {
+      const dec = decodeURIComponent(cur);
+      if (dec === cur) break;
+      cur = dec;
+    } catch {
+      break;
+    }
+  }
+  return cur;
+}
+
 function escapeHtml(unsafe) {
   return (unsafe || '')
     .toString()
@@ -54,11 +68,12 @@ function transformSeo(response, tagsToInject) {
     .on('#twitter-title', { element(el) { el.remove(); } })
     .on('#twitter-description', { element(el) { el.remove(); } })
     .on('#twitter-image', { element(el) { el.remove(); } })
-    .on('[property="og:image"]', { element(el) { el.remove(); } })
-    .on('[property="og:title"]', { element(el) { el.remove(); } })
-    .on('[property="og:description"]', { element(el) { el.remove(); } })
-    .on('[name="twitter:image"]', { element(el) { el.remove(); } })
-    .on('head', { element(el) { el.append(tagsToInject, { html: true }); } })
+    .on('[property^="og:image"]', { element(el) { el.remove(); } })
+    .on('[property^="og:title"]', { element(el) { el.remove(); } })
+    .on('[property^="og:description"]', { element(el) { el.remove(); } })
+    .on('[name^="twitter:image"]', { element(el) { el.remove(); } })
+    .on('[name^="twitter:card"]', { element(el) { el.remove(); } })
+    .on('head', { element(el) { el.prepend(tagsToInject, { html: true }); } })
     .transform(response);
 }
 
@@ -87,7 +102,7 @@ export async function onRequest(context) {
     const response = await context.next();
     const siteUrl = `${url.protocol}//${url.hostname}`;
     const canonicalUrl = `${siteUrl}${listingKey}`;
-    const finalImage = `${siteUrl}/assets/logo.png`;
+    const finalImage = `${siteUrl}/assets/og-banner.jpg`;
     const pageTitle = `${escapeHtml(listingMeta.title)} | جذع`;
     const tagsToInject = `
     <title>${pageTitle}</title>
@@ -98,6 +113,10 @@ export async function onRequest(context) {
     <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
     <meta property="og:type" content="website">
     <meta property="og:image" content="${finalImage}">
+    <meta property="og:image:secure_url" content="${finalImage}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:site_name" content="جذع">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${pageTitle}">
@@ -131,7 +150,7 @@ export async function onRequest(context) {
 
   const pathParts = path.split('/').filter(Boolean);
   if (pathParts.length < 2) return context.next();
-  const idOrSlug = decodeURIComponent(pathParts[1]);
+  const idOrSlug = robustDecode(pathParts[1]);
 
   const FIRESTORE_BASE =
     'https://firestore.googleapis.com/v1/projects/jidhe-trunk/databases/(default)/documents';
@@ -216,11 +235,11 @@ export async function onRequest(context) {
   const canonicalUrl = `${siteUrl}${path}`;
   const siteName = 'جذع - حكاية تنمو | مصطفى ياسر';
 
-  let finalImage = `${siteUrl}/assets/logo.png`;
+  let finalImage = `${siteUrl}/assets/og-banner.jpg`;
   if (image && (image.startsWith('http://') || image.startsWith('https://'))) {
     finalImage = image;
   } else if (image && image.startsWith('data:image')) {
-    finalImage = `${siteUrl}/img/${collectionName}/${actualDocId}.jpg`;
+    finalImage = `${siteUrl}/img/${collectionName}/${encodeURIComponent(actualDocId)}.jpg`;
   }
 
   const shortDescription =
@@ -239,8 +258,10 @@ export async function onRequest(context) {
   <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
   <meta property="og:type" content="${ogType}">
   <meta property="og:image" content="${escapeHtml(finalImage)}">
+  <meta property="og:image:secure_url" content="${escapeHtml(finalImage)}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:alt" content="${escapeHtml(title)}">
   <meta property="og:site_name" content="${siteName}">
   <meta property="og:locale" content="ar_AR">

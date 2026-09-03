@@ -92,7 +92,29 @@ export default function ReviewsSection() {
       </p>
 
       <div className="reviews-grid" id="reviews-grid">
-        {loading && <SkeletonCards count={3} />}
+        {loading && (
+          <>
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="review-card skeleton-card review-skeleton-card"
+                style={{
+                  minWidth: '300px',
+                  maxWidth: '380px',
+                  flex: '0 0 320px',
+                  padding: '30px',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <div className="skeleton-line" style={{ width: '35%', height: '14px', margin: '0 0 16px 0', borderRadius: '12px' }} />
+                <div className="skeleton-line" style={{ width: '55%', height: '18px', margin: '0 0 20px 0', borderRadius: '4px' }} />
+                <div className="skeleton-line" style={{ width: '95%', height: '12px', margin: '0 0 8px 0' }} />
+                <div className="skeleton-line" style={{ width: '75%', height: '12px', margin: '0 0 8px 0' }} />
+                <div className="skeleton-line" style={{ width: '85%', height: '12px', margin: 0 }} />
+              </div>
+            ))}
+          </>
+        )}
 
         {error && (
           <div className="error-state" style={{ gridColumn: '1 / -1' }}>

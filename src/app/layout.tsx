@@ -107,9 +107,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: `${SITE_URL}/assets/logo.png`,
-        width: 512,
-        height: 512,
+        url: `${SITE_URL}/assets/og-banner.jpg`,
+        width: 1200,
+        height: 630,
         alt: 'مصطفى ياسر - مطور برمجيات ومعلم برمجة | جذع',
       },
     ],
@@ -121,7 +121,7 @@ export const metadata: Metadata = {
     title: 'مصطفى ياسر (جذع) | مطور برمجيات ومعلم برمجة للأطفال واليافعين',
     description:
       'مطور ويب Full Stack خبير في Next.js & React ومتاح للتوظيف والعمل الحر، ومدرب برمجة لليافعين والأطفال.',
-    images: [`${SITE_URL}/assets/logo.png`],
+    images: [`${SITE_URL}/assets/og-banner.jpg`],
   },
   robots: {
     index: true,

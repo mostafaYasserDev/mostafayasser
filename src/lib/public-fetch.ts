@@ -44,7 +44,7 @@ export function getPublicImageUrl(
   collectionName: 'articles' | 'projects' | 'services' = 'articles',
   docId?: string
 ): string {
-  if (!image) return `${SITE_URL}/assets/logo.png`;
+  if (!image) return `${SITE_URL}/assets/og-banner.jpg`;
   const clean = image.trim();
   if (clean.startsWith('http://') || clean.startsWith('https://')) {
     return clean;
@@ -55,7 +55,7 @@ export function getPublicImageUrl(
   if (clean.startsWith('/')) {
     return `${SITE_URL}${clean}`;
   }
-  return `${SITE_URL}/assets/logo.png`;
+  return `${SITE_URL}/assets/og-banner.jpg`;
 }
 
 // Helper to thoroughly decode URI component safely (handles double/triple encoding)

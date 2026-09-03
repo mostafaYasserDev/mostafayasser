@@ -1,14 +1,32 @@
 export async function onRequest(context) {
   const { path } = context.params;
+  const url = new URL(context.request.url);
+  const siteUrl = `${url.protocol}//${url.hostname}`;
+  const defaultBanner = `${siteUrl}/assets/og-banner.jpg`;
+
+  function robustDecode(str) {
+    let cur = str || '';
+    for (let i = 0; i < 3; i++) {
+      try {
+        const dec = decodeURIComponent(cur);
+        if (dec === cur) break;
+        cur = dec;
+      } catch {
+        break;
+      }
+    }
+    return cur;
+  }
 
   // path format: ['articles' | 'projects' | 'services', 'documentId.jpg']
   if (!path || path.length < 2) {
-    return new Response('Not found', { status: 404 });
+    return Response.redirect(defaultBanner, 302);
   }
 
   const collection = path[0];
-  const idWithExt = path[1];
-  const id = idWithExt.replace(/\.[^/.]+$/, ''); // Remove extension like .jpg or .webp
+  const fullFileName = path.slice(1).join('/');
+  const rawIdWithExt = fullFileName.replace(/\.[^/.]+$/, '');
+  const decodedId = robustDecode(rawIdWithExt);
 
   const FIRESTORE_BASE =
     'https://firestore.googleapis.com/v1/projects/jidhe-trunk/databases/(default)/documents';
@@ -16,74 +34,97 @@ export async function onRequest(context) {
   try {
     let docFields = null;
 
-    // 1. Try slug query first
-    try {
-      const queryResponse = await fetch(`${FIRESTORE_BASE}:runQuery`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          structuredQuery: {
-            from: [{ collectionId: collection }],
-            where: {
-              fieldFilter: {
-                field: { fieldPath: 'slug' },
-                op: 'EQUAL',
-                value: { stringValue: id },
+    // 1. Try slug query with decoded and raw slug
+    const slugsToTry = Array.from(new Set([decodedId, rawIdWithExt])).filter(Boolean);
+    for (const s of slugsToTry) {
+      try {
+        const queryResponse = await fetch(`${FIRESTORE_BASE}:runQuery`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            structuredQuery: {
+              from: [{ collectionId: collection }],
+              where: {
+                fieldFilter: {
+                  field: { fieldPath: 'slug' },
+                  op: 'EQUAL',
+                  value: { stringValue: s },
+                },
               },
+              limit: 1,
             },
-            limit: 1,
-          },
-        }),
-      });
+          }),
+        });
 
-      if (queryResponse.ok) {
-        const queryData = await queryResponse.json();
-        if (Array.isArray(queryData) && queryData[0] && queryData[0].document) {
-          docFields = queryData[0].document.fields;
+        if (queryResponse.ok) {
+          const queryData = await queryResponse.json();
+          if (Array.isArray(queryData) && queryData[0] && queryData[0].document) {
+            docFields = queryData[0].document.fields;
+            break;
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
     // 2. Try direct doc ID
     if (!docFields) {
-      const response = await fetch(`${FIRESTORE_BASE}/${collection}/${encodeURIComponent(id)}`);
-      if (response.ok) {
-        const docData = await response.json();
-        docFields = docData.fields;
+      for (const id of slugsToTry) {
+        try {
+          const response = await fetch(`${FIRESTORE_BASE}/${collection}/${encodeURIComponent(id)}`);
+          if (response.ok) {
+            const docData = await response.json();
+            if (docData.fields) {
+              docFields = docData.fields;
+              break;
+            }
+          }
+        } catch {}
       }
     }
 
     if (!docFields) {
-      return new Response('Image not found', { status: 404 });
+      return Response.redirect(defaultBanner, 302);
     }
 
-    // Extract base64 image data
-    const base64Str =
+    // Extract image data
+    const rawImageStr =
       docFields.coverImage?.stringValue ||
       docFields.mainImage?.stringValue ||
       docFields.image?.stringValue ||
       docFields.thumbnail?.stringValue;
 
-    if (!base64Str) {
-      return new Response('No image associated with document', { status: 404 });
+    if (!rawImageStr) {
+      return Response.redirect(defaultBanner, 302);
     }
+
+    const cleanStr = rawImageStr.trim();
 
     // If it is already an external HTTP URL, redirect
-    if (base64Str.startsWith('http://') || base64Str.startsWith('https://')) {
-      return Response.redirect(base64Str, 302);
+    if (cleanStr.startsWith('http://') || cleanStr.startsWith('https://')) {
+      return Response.redirect(cleanStr, 302);
     }
 
-    // Parse base64 data URL (e.g. data:image/webp;base64,...)
-    const matches = base64Str.match(/^data:(image\/[^;]+);base64,(.+)$/);
-    if (!matches || matches.length !== 3) {
-      return new Response('Invalid image format', { status: 400 });
+    // Parse base64 data
+    let mimeType = 'image/jpeg';
+    let base64Body = cleanStr;
+
+    if (cleanStr.startsWith('data:')) {
+      const commaIndex = cleanStr.indexOf(',');
+      if (commaIndex !== -1) {
+        const header = cleanStr.slice(0, commaIndex);
+        const mimeMatch = header.match(/data:([^;]+)/);
+        if (mimeMatch) {
+          mimeType = mimeMatch[1];
+        }
+        base64Body = cleanStr.slice(commaIndex + 1);
+      }
     }
 
-    const mimeType = matches[1];
-    const base64Data = matches[2];
+    // Strip whitespace, line breaks, and newlines that can break atob
+    base64Body = base64Body.replace(/\s+/g, '');
 
     // Decode binary data
-    const binaryString = atob(base64Data);
+    const binaryString = atob(base64Body);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
       bytes[i] = binaryString.charCodeAt(i);
@@ -92,11 +133,13 @@ export async function onRequest(context) {
     return new Response(bytes.buffer, {
       headers: {
         'Content-Type': mimeType,
-        'Cache-Control': 'public, max-age=86400, s-maxage=31536000',
+        'Content-Length': bytes.length.toString(),
+        'Cache-Control': 'public, max-age=86400, s-maxage=31536000, immutable',
         'Access-Control-Allow-Origin': '*',
       },
     });
   } catch (error) {
-    return new Response('Internal Server Error: ' + (error?.message || error), { status: 500 });
+    console.error('Error processing image:', error);
+    return Response.redirect(defaultBanner, 302);
   }
 }
