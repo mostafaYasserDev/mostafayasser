@@ -18,9 +18,11 @@ export default function Header() {
     const isDarkSaved = savedTheme === 'dark';
     
     if (isDarkSaved) {
+      document.documentElement.classList.add('dark-mode');
       document.body.classList.add('dark-mode');
       setIsDark(true);
     } else {
+      document.documentElement.classList.remove('dark-mode');
       document.body.classList.remove('dark-mode');
       setIsDark(false);
     }
@@ -31,9 +33,11 @@ export default function Header() {
     const nextDark = !isDark;
     setIsDark(nextDark);
     if (nextDark) {
+      document.documentElement.classList.add('dark-mode');
       document.body.classList.add('dark-mode');
       localStorage.setItem('theme', 'dark');
     } else {
+      document.documentElement.classList.remove('dark-mode');
       document.body.classList.remove('dark-mode');
       localStorage.setItem('theme', 'light');
     }
