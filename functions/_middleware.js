@@ -319,8 +319,11 @@ export async function onRequest(context) {
   }
 
   if (!collectionName) {
-    // Unknown route — let Next.js handle it
+    // Unknown route — let Next.js handle it; if 404, serve custom branded page
     const response = await context.next();
+    if (response.status === 404) {
+      return serve404(context);
+    }
     return withSecurityHeaders(response);
   }
 
