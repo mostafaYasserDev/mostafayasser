@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { db, collection, getDocs } from '@/lib/firebase';
-import { fetchDocBySlugOrId, PublicProject, robustDecode } from '@/lib/public-fetch';
+import { fetchDocBySlugOrId, PublicProject, robustDecode, getPublicImageUrl } from '@/lib/public-fetch';
 import ProjectDetailClient from './ProjectDetailClient';
 
 const SITE_URL = 'https://mostafayasser.online';
@@ -42,7 +42,7 @@ export async function generateMetadata({
   const description =
     project.shortDescription ||
     `استكشف تفاصيل وتقنيات مشروع ${project.title} المنفذ بواسطة المطور مصطفى ياسر (جذع). حلول برمجية وتصميم واجهات حديثة.`;
-  const image = project.mainImage || `${SITE_URL}/assets/logo.png`;
+  const image = getPublicImageUrl(project.mainImage, 'projects', project.id);
   const canonicalUrl = `${SITE_URL}/project/${encodeURIComponent(project.slug || project.id)}`;
 
   return {

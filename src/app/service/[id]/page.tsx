@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { db, collection, getDocs } from '@/lib/firebase';
-import { fetchDocBySlugOrId, PublicService, robustDecode } from '@/lib/public-fetch';
+import { fetchDocBySlugOrId, PublicService, robustDecode, getPublicImageUrl } from '@/lib/public-fetch';
 import ServiceDetailClient from './ServiceDetailClient';
 
 const SITE_URL = 'https://mostafayasser.online';
@@ -42,7 +42,7 @@ export async function generateMetadata({
   const description =
     service.description.replace(/<[^>]*>/g, '').slice(0, 160) ||
     `تعرف على تفاصيل ومميزات خدمة ${service.title} المقدمة من المطور مصطفى ياسر (جذع). حلول برمجية احترافية واستشارات تقنية.`;
-  const image = service.mainImage || `${SITE_URL}/assets/logo.png`;
+  const image = getPublicImageUrl(service.mainImage, 'services', service.id);
   const canonicalUrl = `${SITE_URL}/service/${encodeURIComponent(service.slug || service.id)}`;
 
   return {

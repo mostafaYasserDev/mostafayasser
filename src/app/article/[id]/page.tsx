@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { db, collection, getDocs } from '@/lib/firebase';
-import { fetchDocBySlugOrId, PublicArticle, robustDecode } from '@/lib/public-fetch';
+import { fetchDocBySlugOrId, PublicArticle, robustDecode, getPublicImageUrl } from '@/lib/public-fetch';
 import ArticleDetailClient from './ArticleDetailClient';
 
 const SITE_URL = 'https://mostafayasser.online';
@@ -42,7 +42,7 @@ export async function generateMetadata({
   const description =
     article.shortDescription ||
     `اقرأ مقال "${article.title}" بقلم مصطفى ياسر على موقع جذع. مقالات وحكايات في تطوير الويب والبرمجة.`;
-  const image = article.coverImage || `${SITE_URL}/assets/logo.png`;
+  const image = getPublicImageUrl(article.coverImage, 'articles', article.id);
   const canonicalUrl = `${SITE_URL}/article/${encodeURIComponent(article.slug || article.id)}`;
 
   return {

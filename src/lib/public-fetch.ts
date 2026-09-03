@@ -33,6 +33,31 @@ export interface PublicService {
   featured?: boolean;
 }
 
+const SITE_URL = 'https://mostafayasser.online';
+
+/**
+ * Returns a valid, absolute public HTTP/HTTPS URL for Open Graph and social media previews.
+ * Converts base64 data URIs into standard dynamic image endpoints so platforms like WhatsApp and Telegram can render them.
+ */
+export function getPublicImageUrl(
+  image?: string,
+  collectionName: 'articles' | 'projects' | 'services' = 'articles',
+  docId?: string
+): string {
+  if (!image) return `${SITE_URL}/assets/logo.png`;
+  const clean = image.trim();
+  if (clean.startsWith('http://') || clean.startsWith('https://')) {
+    return clean;
+  }
+  if (clean.startsWith('data:image') && docId) {
+    return `${SITE_URL}/img/${collectionName}/${encodeURIComponent(docId)}.jpg`;
+  }
+  if (clean.startsWith('/')) {
+    return `${SITE_URL}${clean}`;
+  }
+  return `${SITE_URL}/assets/logo.png`;
+}
+
 // Helper to thoroughly decode URI component safely (handles double/triple encoding)
 export function robustDecode(raw: string): string {
   if (!raw) return '';
