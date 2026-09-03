@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { db, collection, onSnapshot, query, where } from '@/lib/firebase';
+import { db, collection, getDocs, query, where } from '@/lib/firebase';
 import SkeletonCards from '@/components/SkeletonCards';
 
 export interface DonationMethod {
@@ -21,25 +21,34 @@ export default function DonationPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const q = query(collection(db, 'donations'), where('active', '==', true));
-    const unsubscribe = onSnapshot(
-      q,
-      (snap) => {
+    let isMounted = true;
+
+    async function loadDonations() {
+      try {
+        const q = query(collection(db, 'donations'), where('active', '==', true));
+        const snap = await getDocs(q);
+        if (!isMounted) return;
+
         const items: DonationMethod[] = [];
         snap.forEach((doc) => {
           items.push({ id: doc.id, ...(doc.data() as Omit<DonationMethod, 'id'>) });
         });
         setDonations(items);
         setLoading(false);
-      },
-      (err) => {
+      } catch (err) {
         console.error('Error loading donations:', err);
-        setError(true);
-        setLoading(false);
+        if (isMounted) {
+          setError(true);
+          setLoading(false);
+        }
       }
-    );
+    }
 
-    return () => unsubscribe();
+    loadDonations();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
