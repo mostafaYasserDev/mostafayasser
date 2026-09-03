@@ -285,6 +285,32 @@ async function handleDynamicDetailPage(request, env, url) {
   return rewriter.transform(templateRes);
 }
 
+async function serveNotFound(env, request) {
+  if (env.ASSETS) {
+    try {
+      const url = new URL(request.url);
+      const notFoundReq = new Request(`${url.origin}/404.html`, {
+        headers: request.headers,
+      });
+      const notFoundRes = await env.ASSETS.fetch(notFoundReq);
+      if (notFoundRes && notFoundRes.status === 200) {
+        const notFoundHeaders = new Headers(notFoundRes.headers);
+        notFoundHeaders.set('Content-Type', 'text/html; charset=utf-8');
+        return withSecurityHeaders(
+          new Response(notFoundRes.body, {
+            status: 404,
+            statusText: 'Not Found',
+            headers: notFoundHeaders,
+          })
+        );
+      }
+    } catch (e) {
+      console.error('Error serving custom 404:', e);
+    }
+  }
+  return withSecurityHeaders(new Response('404 Not Found', { status: 404 }));
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -325,11 +351,18 @@ export default {
         if (dynamicRes) {
           return withSecurityHeaders(dynamicRes);
         }
+        // Article/project/service really doesn't exist in Firestore -> serve custom 404 page
+        return serveNotFound(env, request);
+      }
+
+      // If HTML page route was not found, serve the custom branded 404 page
+      if (res.status === 404 && !url.pathname.includes('.')) {
+        return serveNotFound(env, request);
       }
 
       return withSecurityHeaders(res);
     }
 
-    return withSecurityHeaders(new Response('Not found', { status: 404 }));
+    return serveNotFound(env, request);
   },
 };
