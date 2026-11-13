@@ -2,22 +2,20 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth, onAuthStateChanged } from '@/lib/firebase';
+import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 
 export default function AdminIndexPage() {
   const router = useRouter();
+  const { currentUser, checkingAuth } = useAdminAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+    if (!checkingAuth) {
+      if (currentUser) {
         router.replace('/admin/dashboard');
-      } else {
-        router.replace('/admin/login');
       }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
+      // If not logged in, AdminAuthProvider already redirects to /admin/login
+    }
+  }, [currentUser, checkingAuth, router]);
 
   return (
     <div

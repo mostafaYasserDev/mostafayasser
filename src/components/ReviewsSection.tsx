@@ -137,7 +137,7 @@ export default function ReviewsSection() {
                 {r.clientName}
               </h3>
               <p style={{ fontSize: '1.1rem', lineHeight: '1.6', fontStyle: 'italic' }}>
-                "{r.reviewText}"
+                &ldquo;{r.reviewText}&rdquo;
               </p>
             </div>
           ))}

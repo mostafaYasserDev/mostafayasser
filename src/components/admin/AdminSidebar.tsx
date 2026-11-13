@@ -3,12 +3,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { auth, signOut } from '@/lib/firebase';
+import { usePathname } from 'next/navigation';
+import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 
 export default function AdminSidebar() {
   const pathname = usePathname();
-  const router = useRouter();
+  const { handleLogout } = useAdminAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   // Close sidebar on route change
@@ -27,15 +27,6 @@ export default function AdminSidebar() {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.push('/admin/login');
-    } catch (err) {
-      console.error('Logout error:', err);
-    }
-  };
 
   const navItems = [
     { href: '/admin/dashboard', label: 'لوحة التحكم', icon: 'fas fa-chart-pie' },

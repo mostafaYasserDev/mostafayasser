@@ -302,6 +302,7 @@ export default function RootLayout({
             __html: `
               try {
                 if (localStorage.getItem('theme') === 'dark') {
+                  document.documentElement.classList.add('dark-mode');
                   document.body.classList.add('dark-mode');
                 }
               } catch (e) {}

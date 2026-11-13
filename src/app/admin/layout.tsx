@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import '@/styles/admin.css';
+import AdminAuthProvider from '@/components/admin/AdminAuthProvider';
 
 export const metadata: Metadata = {
   title: 'لوحة التحكم - جذع',
@@ -19,5 +20,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <AdminAuthProvider>{children}</AdminAuthProvider>;
 }

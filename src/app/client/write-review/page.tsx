@@ -9,6 +9,7 @@ export default function WriteReviewPage() {
   const [clientName, setClientName] = useState('');
   const [serviceName, setServiceName] = useState('');
   const [reviewText, setReviewText] = useState('');
+  const [hp, setHp] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -16,6 +17,12 @@ export default function WriteReviewPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+
+    // Honeypot check for bots
+    if (hp) {
+      setIsSubmitted(true);
+      return;
+    }
 
     const trimmedName = clientName.trim();
     const trimmedReview = reviewText.trim();
@@ -25,8 +32,8 @@ export default function WriteReviewPage() {
       return;
     }
 
-    if (trimmedName.length < 2 || trimmedReview.length < 5) {
-      setErrorMsg('الاسم أو الرأي قصير جداً.');
+    if (trimmedName.length < 2 || trimmedReview.length < 10) {
+      setErrorMsg('الاسم يجب أن لا يقل عن حرفين، والرأي لا يقل عن 10 أحرف.');
       return;
     }
 
@@ -92,6 +99,18 @@ export default function WriteReviewPage() {
             </p>
 
             <form onSubmit={handleSubmit}>
+              {/* Anti-spam invisible honeypot */}
+              <div style={{ display: 'none', opacity: 0, position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                <input
+                  type="text"
+                  name="company_website_url"
+                  value={hp}
+                  onChange={(e) => setHp(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
               <div className="form-group" style={{ marginBottom: '18px' }}>
                 <label htmlFor="client-name" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
                   اسمك أو اسم شركتك

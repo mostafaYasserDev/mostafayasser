@@ -1,52 +1,14 @@
-'use strict';
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { auth, onAuthStateChanged, User } from '@/lib/firebase';
+import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export default function AdminDashboardPage() {
-  const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const { currentUser } = useAdminAuth();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push('/admin/login');
-      } else {
-        setCurrentUser(user);
-      }
-      setCheckingAuth(false);
-    });
-
-    return () => unsubscribe();
-  }, [router]);
-
-  if (checkingAuth) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          width: '100vw',
-          fontSize: '1.2rem',
-          color: 'var(--admin-primary)',
-          fontWeight: 'bold',
-        }}
-      >
-        جاري التحقق من الصلاحيات...
-      </div>
-    );
-  }
-
-  if (!currentUser) {
-    return null;
-  }
+  if (!currentUser) return null;
 
   const dashboardLinks = [
     { href: '/admin/articles', icon: '📜', label: 'المقالات' },

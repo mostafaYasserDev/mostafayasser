@@ -18,7 +18,7 @@ import {
   getDocs,
   User,
 } from '@/lib/firebase';
-import { translateFirebaseError } from '@/lib/admin-utils';
+import { translateFirebaseError, compressImageWebp, generateMicroThumbnail } from '@/lib/admin-utils';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export interface AdminProject {
@@ -32,50 +32,8 @@ export interface AdminProject {
   githubLink?: string;
   featured?: boolean;
   mainImage?: string;
+  thumbnail?: string;
   createdAt?: number;
-}
-
-const MAX_ENCODED_IMAGE_SIZE = 550 * 1024;
-
-// Image compression to WebP matching original
-function compressImage(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > MAX_WIDTH) {
-          height *= MAX_WIDTH / width;
-          width = MAX_WIDTH;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          reject(new Error('Canvas context error'));
-          return;
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const encoded = canvas.toDataURL('image/webp', 0.72);
-        if (encoded.length > MAX_ENCODED_IMAGE_SIZE) {
-          reject(new Error('الصورة كبيرة بعد الضغط. استخدم صورة أصغر.'));
-          return;
-        }
-        resolve(encoded);
-      };
-      img.onerror = (error) => reject(error);
-    };
-    reader.onerror = (error) => reject(error);
-  });
 }
 
 export default function AdminProjectsPage() {
@@ -401,10 +359,13 @@ export default function AdminProjectsPage() {
 
     try {
       let finalImage = mainImage;
+      let finalThumbnail = '';
 
       if (selectedFile) {
         setProgressMsg('جاري ضغط ومعالجة الصورة...');
-        finalImage = await compressImage(selectedFile);
+        finalImage = await compressImageWebp(selectedFile, 850, 0.72, 70 * 1024);
+        setProgressMsg('جاري توليد الصورة المصغرة...');
+        finalThumbnail = await generateMicroThumbnail(finalImage, 160, 0.5);
         setProgressMsg('');
       }
 
@@ -432,6 +393,7 @@ export default function AdminProjectsPage() {
         githubLink: githubLink.trim() || null,
         featured: featured,
         mainImage: finalImage || null,
+        thumbnail: finalThumbnail || undefined,
         updatedAt: Date.now(),
       };
 

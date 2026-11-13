@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import DOMPurify from 'isomorphic-dompurify';
 import { prepareEmbeddedHtml, HTML_EMBED_SANDBOX, HTML_EMBED_RESIZE_MESSAGE } from '@/lib/html-embed';
 
 interface Props {
@@ -47,8 +48,12 @@ export default function HtmlContentRenderer({ content, className = 'detail-conte
       container.appendChild(iframe);
       iframes.push(iframe);
     } else {
-      // 2. Render normal HTML with embedded custom HTML blocks
-      container.innerHTML = content;
+      // 2. Render normal HTML with embedded custom HTML blocks (Sanitized safely)
+      const cleanHtml = DOMPurify.sanitize(content, {
+        ADD_TAGS: ['iframe'],
+        ADD_ATTR: ['target', 'data-html-src', 'style', 'class'],
+      });
+      container.innerHTML = cleanHtml;
 
       // Ensure all inline-btn links open safely in new tab
       container.querySelectorAll('a.inline-btn').forEach((a) => {

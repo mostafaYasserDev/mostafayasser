@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { db, collection, getDocs, query, limit } from '@/lib/firebase';
+import { db, collection, getDocs, query, limit, orderBy } from '@/lib/firebase';
 import { getCachedData, setCachedData } from '@/lib/public-cache';
 import SkeletonCards from './SkeletonCards';
 import EmptyState from './EmptyState';
@@ -14,6 +14,7 @@ export interface ArticleData {
   slug?: string;
   shortDescription?: string;
   coverImage?: string;
+  thumbnail?: string;
   publishDate?: string;
   featured?: boolean;
 }
@@ -41,23 +42,30 @@ export default function ArticlesSection() {
       try {
         setLoading(true);
         setError(false);
-        const q = query(collection(db, 'articles'), limit(3));
-        const snap = await getDocs(q);
+        let snap;
+        try {
+          const q = query(collection(db, 'articles'), orderBy('publishDate', 'desc'), limit(3));
+          snap = await getDocs(q);
+        } catch {
+          const qFallback = query(collection(db, 'articles'), limit(6));
+          snap = await getDocs(qFallback);
+        }
 
         const items: ArticleData[] = [];
         snap.forEach((doc) => {
           items.push({ id: doc.id, ...(doc.data() as Omit<ArticleData, 'id'>) });
         });
 
-        // Sort by date descending
+        // Ensure descending order
         items.sort((a, b) => {
           const dateA = new Date(a.publishDate || 0).getTime();
           const dateB = new Date(b.publishDate || 0).getTime();
           return dateB - dateA;
         });
 
-        setArticles(items);
-        setCachedData('latest_articles', items);
+        const latestThree = items.slice(0, 3);
+        setArticles(latestThree);
+        setCachedData('latest_articles', latestThree);
       } catch (err) {
         console.error('Error fetching latest articles:', err);
         setError(true);
@@ -114,10 +122,10 @@ export default function ArticlesSection() {
             const targetSlug = a.slug || a.id;
             return (
               <div key={a.id} className="card content-in">
-                {a.coverImage && (
+                {(a.thumbnail || a.coverImage) && (
                   <div className="card-img-wrapper">
                     <img
-                      src={a.coverImage}
+                      src={a.thumbnail || a.coverImage}
                       alt={`غلاف مقال ${a.title} - مدونة مصطفى ياسر (جذع)`}
                       className="card-img"
                       loading="lazy"

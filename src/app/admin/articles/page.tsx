@@ -18,7 +18,7 @@ import {
   getDocs,
   User,
 } from '@/lib/firebase';
-import { translateFirebaseError } from '@/lib/admin-utils';
+import { translateFirebaseError, compressImageWebp, generateMicroThumbnail } from '@/lib/admin-utils';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export interface AdminArticle {
@@ -28,51 +28,9 @@ export interface AdminArticle {
   shortDescription: string;
   content: string;
   coverImage?: string;
+  thumbnail?: string;
   publishDate?: string;
   createdAt?: number;
-}
-
-const MAX_ENCODED_IMAGE_SIZE = 550 * 1024;
-
-// Image compression matching original
-function compressImage(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > MAX_WIDTH) {
-          height *= MAX_WIDTH / width;
-          width = MAX_WIDTH;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          reject(new Error('Canvas error'));
-          return;
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const encoded = canvas.toDataURL('image/webp', 0.72);
-        if (encoded.length > MAX_ENCODED_IMAGE_SIZE) {
-          reject(new Error('الصورة كبيرة بعد الضغط. استخدم صورة أصغر.'));
-          return;
-        }
-        resolve(encoded);
-      };
-      img.onerror = (error) => reject(error);
-    };
-    reader.onerror = (error) => reject(error);
-  });
 }
 
 export default function AdminArticlesPage() {
@@ -380,11 +338,14 @@ export default function AdminArticlesPage() {
 
     try {
       let finalCoverImage = coverImage;
+      let finalThumbnail = '';
 
-      // Handle image compression if selected
+      // Handle image compression if selected — use ultra-compact shared utility
       if (selectedFile) {
         setProgressMsg('جاري ضغط ومعالجة الصورة...');
-        finalCoverImage = await compressImage(selectedFile);
+        finalCoverImage = await compressImageWebp(selectedFile, 850, 0.72, 70 * 1024);
+        setProgressMsg('جاري توليد الصورة المصغرة...');
+        finalThumbnail = await generateMicroThumbnail(finalCoverImage, 160, 0.5);
         setProgressMsg('');
       }
 
@@ -408,6 +369,7 @@ export default function AdminArticlesPage() {
         shortDescription: shortDesc.trim(),
         content: htmlContent,
         coverImage: finalCoverImage || null,
+        thumbnail: finalThumbnail || undefined,
         updatedAt: Date.now(),
       };
 

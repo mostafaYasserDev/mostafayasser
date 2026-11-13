@@ -59,6 +59,7 @@ export default function ContactSection() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [hp, setHp] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -137,6 +138,19 @@ export default function ContactSection() {
     e.preventDefault();
     if (submitting) return;
 
+    // 1. Honeypot check for bots
+    if (hp) {
+      setIsSubmitted(true);
+      return;
+    }
+
+    // 2. Client-side rate limiting (min 30s)
+    const lastSent = sessionStorage.getItem('jidhe_last_msg_sent');
+    if (lastSent && Date.now() - Number(lastSent) < 30000) {
+      setStatus({ type: 'error', text: 'تم إرسال رسالتك بالفعل. يرجى الانتظار قليلاً قبل إرسال رسالة جديدة.' });
+      return;
+    }
+
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     const trimmedMessage = message.trim();
@@ -165,6 +179,7 @@ export default function ContactSection() {
         source: 'contact-form',
       });
 
+      sessionStorage.setItem('jidhe_last_msg_sent', String(Date.now()));
       setName('');
       setEmail('');
       setMessage('');
@@ -348,6 +363,18 @@ export default function ContactSection() {
               </div>
 
               <form id="public-contact-form" onSubmit={handleSubmit}>
+                {/* Anti-spam invisible honeypot */}
+                <div style={{ display: 'none', opacity: 0, position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                  <input
+                    type="text"
+                    name="phone_work_extension"
+                    value={hp}
+                    onChange={(e) => setHp(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
                 <div className="form-group">
                   <label htmlFor="contact-name">الاسم</label>
                   <input

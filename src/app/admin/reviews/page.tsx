@@ -272,7 +272,7 @@ export default function AdminReviewsPage() {
                         </td>
                         <td className="table-text-cell">
                           <p className="table-text-preview" style={{ margin: 0 }}>
-                            "{previewText}"
+                            &ldquo;{previewText}&rdquo;
                           </p>
                           {isLong && (
                             <button
@@ -405,7 +405,7 @@ export default function AdminReviewsPage() {
                 margin: '15px 0 25px',
               }}
             >
-              "{selectedReview.reviewText}"
+              &ldquo;{selectedReview.reviewText}&rdquo;
             </div>
 
             <div
